@@ -43,7 +43,7 @@ class MultiApp:
     def run(self):
         app_state = st.experimental_get_query_params()
         app_state = {
-           # k: v[0] if isinstance(v, list) else v for k, v in app_state.items()
+           #k: v[0] if isinstance(v, list) else v for k, v in app_state.items()
         }  # fetch the first item in each query string as we don't have multiple values for each query string key in this example
 
         # st.write('before', app_state)
@@ -54,40 +54,16 @@ class MultiApp:
             app_state["page"]) if "page" in app_state else 0
 
         st.sidebar.title("Menu dos painéis")
+
         title = st.sidebar.radio(
-            'Selecione o ODS:',
-            ['Home', 'Erradicação da pobreza', 'Fome Zero e Agricultura Sustentável', 'Saúde e Bem-Estar'], )
+            "Ir para:", titles, index=default_radio, key="radio")
 
-        if title == 'Home':
-            st.markdown('## Bem-vindo a essa aplicação!')
-
-        elif title == 'Erradicação da pobreza':
-            st.markdown('## Erradicar a pobreza em todas as formas e em todos os lugares')
-
-        elif title == 'Fome Zero e Agricultura Sustentável':
-            st.markdown(
-                '## Erradicar a fome, alcançar a segurança alimentar, melhorar a nutrição e promover a agricultura sustentável')
-
-        elif title == 'Saúde e Bem-Estar':
-            st.markdown(
-                '## Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
-
-
-        # Check if 'key' already exists in session_state
-        # If not, then initialize it
-        if 'key' not in st.session_state:
-            st.session_state['key'] = 'value'
-
-        # Session State also supports the attribute based syntax
-        if 'key' not in st.session_state:
-            st.session_state.key = 'value'
-
-        #app_state["page"] = st.session_state.radio
+        app_state["page"] = st.session_state.radio
         # st.write('after', app_state)
 
-        #st.experimental_set_query_params(**app_state)
+        st.experimental_set_query_params(**app_state)
         # st.experimental_set_query_params(**st.session_state.to_dict())
-        #functions[titles.index(title)]()
+        functions[titles.index(title)]()
 
         st.sidebar.title("Sobre")
         st.sidebar.info(

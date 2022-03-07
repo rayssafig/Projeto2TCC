@@ -1,21 +1,28 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
+#Declaring streamlit containers
+#header = st.container()
+
+#with header:
 
 
 def app():
-    st.title("Streamlit for Geospatial Applications")
+#    st.title("Streamlit for Geospatial Applications")
+
+    titl, imga = st.columns((4, 1))
+    imga.image('E_SDG_logo_UN_emblem_square_trans_WEB.png')
+    titl.title('Objetivos de Desenvolvimento Sustentável da ONU')
+    st.write('***Uma aplicação open-source, reprodutível, para gerenciar e publicar dados e mapas relacionados aos Objetivos de Desenvolvimento Sustentpavel (ODS).')
 
     st.markdown(
         """
-        This multi-page web app demonstrates various interactive web apps created using [streamlit](https://streamlit.io) and open-source mapping libraries, 
-        such as [leafmap](https://leafmap.org), [geemap](https://geemap.org), [pydeck](https://deckgl.readthedocs.io), and [kepler.gl](https://docs.kepler.gl/docs/keplergl-jupyter).
-        This is an open-source project and you are very welcome to contribute your comments, questions, resources, and apps as [issues](https://github.com/giswqs/streamlit-geospatial/issues) or 
-        [pull requests](https://github.com/giswqs/streamlit-geospatial/pulls) to the [GitHub repository](https://github.com/giswqs/streamlit-geospatial).
-
+        Essa aplicação com várias páginas tem o objetivo de apresentar diferentes aplicações para representar os ODS e seus indicadores, através de mapas interativos, gráficos e demais dados oriundos de fontes livres para montar o dashboard
+        como [leafmap](https://leafmap.org), [geemap](https://geemap.org), [pydeck](https://deckgl.readthedocs.io), e [kepler.gl](https://docs.kepler.gl/docs/keplergl-jupyter).
+    
         """
     )
 
-    st.info("Click on the left sidebar menu to navigate to the different apps.")
+    st.info("Selecione no menu à esquerda para navegar entre os diferentes ODS")
 
     st.subheader("Timelapse of Satellite Imagery")
     st.markdown(
