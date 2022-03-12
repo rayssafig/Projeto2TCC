@@ -7,7 +7,7 @@ streamlit
 streamlit-folium
 #streamlit-keplergl
 #streamlit-bokeh-events
-fiona
+Fiona
 # leafmap
 # geemap
 git+https://github.com/giswqs/leafmap
