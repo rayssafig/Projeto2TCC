@@ -7,7 +7,7 @@ streamlit~=1.7.0
 streamlit-folium
 #streamlit-keplergl
 #streamlit-bokeh-events
-Fiona @ file:///C:/Users/rayss/Downloads/Fiona-1.8.13-cp36-cp36m-win_amd64.whl
+#Fiona @ file:///C:/Users/rayss/Downloads/Fiona-1.8.13-cp36-cp36m-win_amd64.whl
 # leafmap
 # geemap
 git+https://github.com/giswqs/leafmap
