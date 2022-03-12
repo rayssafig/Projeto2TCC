@@ -1,9 +1,5 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
-#Declaring streamlit containers
-#header = st.container()
-
-#with header:
 
 
 def app():
