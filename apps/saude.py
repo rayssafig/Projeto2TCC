@@ -3,6 +3,7 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import pandas as pd
+#import Fiona
 
 
 def app():

@@ -1,14 +1,18 @@
 --find-links=https://girder.github.io/large_image_wheels GDAL
-geopandas
+geopandas~=0.6.2
 keplergl
-palettable
-localtileserver
-streamlit
+#palettable
+#localtileserver
+streamlit~=1.7.0
 streamlit-folium
 #streamlit-keplergl
 #streamlit-bokeh-events
-Fiona
+Fiona @ file:///C:/Users/rayss/Downloads/Fiona-1.8.13-cp36-cp36m-win_amd64.whl
 # leafmap
 # geemap
 git+https://github.com/giswqs/leafmap
 git+https://github.com/giswqs/geemap
+
+pandas~=1.1.5
+folium~=0.12.1.post1
+pillow~=8.4.0
