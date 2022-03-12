@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 def app():
 
     global data
-    titl, imga = st.columns((4, 1))
+    titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-02.png')
     titl.title('ODS 2: Fome zero e agricultura sustentável')
     st.subheader('Erradicar a fome, alcançar a segurança alimentar, '

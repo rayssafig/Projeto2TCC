@@ -7,7 +7,7 @@ import pandas as pd
 
 def app():
 
-    titl, imga = st.columns((4, 1))
+    titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-03.png')
     titl.title('ODS 3: Saúde e Bem-Estar')
     st.subheader('Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
