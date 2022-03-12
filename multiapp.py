@@ -67,4 +67,4 @@ class MultiApp:
 
         st.sidebar.title("Sobre")
         st.sidebar.info(
-            "Essa aplicação é um projeto open-source disponínel no [GitHub](https://github.com/rayssafig/Projeto2TCC) mantida por Rayssa Figueiredo")
+            "🎈 Essa aplicação é um projeto open-source disponínel no [GitHub](https://github.com/rayssafig/Projeto2TCC) mantida por Rayssa Figueiredo")

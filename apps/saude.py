@@ -6,9 +6,15 @@ import pandas as pd
 
 
 def app():
-    st.title("Casos de COVID-19 em Curitiba - PR")
-    st.subheader("Secretaria de Saúde de Curitiba")
-    st.write('A seguir, será apresentado o relatório contendo as informações sobre o número de casos de COVID-19 no município de Curitiba.')
+
+    titl, imga = st.columns((4, 1))
+    imga.image('E-WEB-Goal-03.png')
+    titl.title('ODS 3: Saúde e Bem-Estar')
+    st.subheader('Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
+
+    st.write('Para este objetivo, serão apresentados dados de **Casos de COVID-19 em Curitiba - PR**')
+    #st.subheader("Secretaria de Saúde de Curitiba")
+    st.write('A seguir, o relatório contendo as informações sobre o número de casos de COVID-19 no município de Curitiba.')
 
     bairros = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/bairros_novo.geojson'
     df_bairros = gpd.read_file(bairros)
@@ -57,10 +63,12 @@ def app():
     # with author_credits:
     st.subheader(f'Créditos')
     st.markdown("""
-    **Obrigada por utilizar minha aplicação!** 
+    **Obrigada por utilizar minha aplicação!** """)
 
-    Os dados utilizado foram disponibilizados pela [Prefeitura Municipal de Curitiba](https://www.curitiba.pr.gov.br/dadosabertos/busca/?pagina=2).
-    Essa aplicação usa a biblioteca Streamlit.    
+    st.info("""\
+        Os dados utilizado foram disponibilizados pela [Prefeitura Municipal de Curitiba](https://www.curitiba.pr.gov.br/dadosabertos/).
+        
+        Essa aplicação usa a biblioteca Streamlit. Disponível no [GitHub](https://github.com/rayssafig/Projeto2TCC)
     """)
 
     #if __name__ == '__main__':
