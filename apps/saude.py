@@ -3,7 +3,7 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import pandas as pd
-#import Fiona
+import fiona
 
 
 def app():
@@ -18,7 +18,9 @@ def app():
     st.write('A seguir, o relatório contendo as informações sobre o número de casos de COVID-19 no município de Curitiba.')
 
     bairros = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/bairros_novo.geojson'
+    #with fiona.open('C:/Users/rayss/PycharmProjects/Projeto2TCC/bairros_novo.geojson') as src:
     df_bairros = gpd.read_file(bairros)
+    #df_bairros = gpd.read_file()
     casos = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/2022-03-03_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
