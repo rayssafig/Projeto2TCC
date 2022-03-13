@@ -70,5 +70,6 @@ class MultiApp:
         st.sidebar.info(
             "🎈 Essa aplicação é um projeto open-source disponínel no [GitHub](https://github.com/rayssafig/Projeto2TCC) mantida por Rayssa Figueiredo")
 
-        st.sidebar.title("Créditos")
-        Image.open('C:/Users/rayss/PycharmProjects/Projeto2TCC/ufpr_1000.jpg')
+        st.sidebar.title("Instituição")
+        #st.sidebar.write('C:/Users/rayss/PycharmProjects/Projeto2TCC/ufpr_1000.jpg')
+        st.sidebar.write("[![UFPR](http://www.ufpr.br/portalufpr/wp-content/uploads/2015/11/ufpr_25.jpg)](https://www.ufpr.br/portalufpr/)")
