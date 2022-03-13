@@ -1,6 +1,7 @@
 """Frameworks for running multiple Streamlit applications as a single app.
 """
 import streamlit as st
+from PIL import Image
 
 # app_state = st.experimental_get_query_params()
 # app_state = {k: v[0] if isinstance(v, list) else v for k, v in app_state.items()} # fetch the first item in each query string as we don't have multiple values for each query string key in this example
@@ -68,3 +69,6 @@ class MultiApp:
         st.sidebar.title("Sobre")
         st.sidebar.info(
             "🎈 Essa aplicação é um projeto open-source disponínel no [GitHub](https://github.com/rayssafig/Projeto2TCC) mantida por Rayssa Figueiredo")
+
+        st.sidebar.title("Créditos")
+        Image.open('C:/Users/rayss/PycharmProjects/Projeto2TCC/ufpr_1000.jpg')
