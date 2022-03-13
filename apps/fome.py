@@ -19,15 +19,7 @@ def app():
     st.subheader('Erradicar a fome, alcançar a segurança alimentar, '
                  'melhorar a nutrição e promover a agricultura sustentável')
 
-    observers = observable("World Tour!",
-                           notebook="@d3/world-tour",
-                           targets=["canvas"],
-                           observe=["name"]
-                           )
 
-    name = observers.get("name")
-
-    st.write(f"Current country: ** *{name}* **")
 
 
 
