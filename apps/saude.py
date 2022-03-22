@@ -3,11 +3,8 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import pandas as pd
-import zipfile
 import requests, zipfile, io
-from io import BytesIO
-from zipfile import ZipFile
-from urllib.request import urlopen
+
 
 def app():
 
@@ -17,10 +14,10 @@ def app():
     st.subheader('Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
 
     st.write('Para este objetivo, serão apresentados dados de **Casos de COVID-19 em Curitiba - PR**')
-    #st.subheader("Secretaria de Saúde de Curitiba")
+    # st.subheader("Secretaria de Saúde de Curitiba")
     st.write('A seguir, o relatório contendo as informações sobre o número de casos de COVID-19 no município de Curitiba.')
 
-    #bairros = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/bairros_novo.geojson'
+    # bairros = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/bairros_novo.geojson'
 
     url = 'https://ippuc.org.br/geodownloads/SHAPES_SIRGAS/DIVISA_DE_BAIRROS_SIRGAS.zip'
     filename = 'DIVISA_DE_BAIRROS.shp'
@@ -30,12 +27,7 @@ def app():
     z.extractall()
 
     df_bairros = gpd.read_file(filename, sep=',')
-    #df
 
-    #bairros = zipfile.ZipFile('https://ippuc.org.br/geodownloads/SHAPES_SIRGAS/DIVISA_DE_BAIRROS_SIRGAS.zip', 'r')
-    #bairros = zipfile.extractall (bairros)
-    #teste = bairros.read('DIVISA_DE_BAIRROS.shp')
-    #df_bairros = gpd.read_file(bairros)
     casos = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/2022-03-03_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
@@ -57,11 +49,8 @@ def app():
     folium.LayerControl().add_to(m)
     folium_static(m)
 
-    #def main():
-     #   with user_input:
     table_days = st.slider('Escolha a quantidade de dias que você quer ver na tabela. ', min_value=3, max_value=15, value=5, step=1)
 
-    #with output_graphs:
     st.subheader(f'Resumo dos últimos {table_days} casos de COVID-19.')
     st.markdown(""" Essa tabela apresenta a data, classificação, idade, sexo, bairro e status dos casos.""")
 
@@ -88,7 +77,4 @@ def app():
         
         Essa aplicação usa a biblioteca Streamlit. Disponível no [GitHub](https://github.com/rayssafig/Projeto2TCC)
     """)
-
-    #if __name__ == '__main__':
-    #main()
 

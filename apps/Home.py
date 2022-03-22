@@ -7,7 +7,6 @@ import leafmap.foliumap as leafmap
 
 
 def app():
-#    st.title("Streamlit for Geospatial Applications")
 
     titl, imga = st.columns((4, 1))
     imga.image('E_SDG_logo_UN_emblem_square_trans_WEB.png')
@@ -110,7 +109,7 @@ def app():
 #
     #st.write(f"Você está vendo o país: *{name}*")
 
-    st.markdown("## Party time!")
+    st.markdown("## Obrigada por utilizar essa aplicação!")
     st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
     btn = st.button("Celebrate!")
     if btn:
