@@ -1,4 +1,7 @@
+from random import randint
+
 import streamlit as st
+
 from streamlit_observable import observable
 import leafmap.foliumap as leafmap
 
@@ -95,14 +98,21 @@ def app():
     st.write('Com foco em promover análises geoespaciais, dados espaciais serão utilizados para permitir ao usuário visualizar diferentes recortes geográficos,'
              ' a nível municipal, estadual, nacional e até global.')
 
-    st.write('🧭 Aproveite a experiência e navegue pelas diferentes páginas para visualizar os ODS. 🔍')
+    st.info('🧭 Aproveite a experiência e navegue pelas diferentes páginas para visualizar os ODS. 🔍')
 
-    observers = observable("Tour pelo mundo!",
-                           notebook="@d3/world-tour",
-                           targets=["canvas"],
-                           observe=["name"]
-                           )
+    #observers = observable("Tour pelo mundo!",
+                           #notebook="@d3/world-tour",
+                           #targets=["canvas"],
+                           #observe=["name"]
+                           #)
+#
+    #name = observers.get("name")
+#
+    #st.write(f"Você está vendo o país: *{name}*")
 
-    name = observers.get("name")
+    st.markdown("## Party time!")
+    st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
+    btn = st.button("Celebrate!")
+    if btn:
+        st.balloons()
 
-    st.write(f"Você está vendo o país: *{name}*")

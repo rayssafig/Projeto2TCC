@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
+import pandas as pd
+import plotly.express as px
 
 
 def app():
@@ -32,13 +34,27 @@ def app():
     folium.Choropleth(
         geo_data=poverty,
         name='Percentual',
-        key_on='feature.properties.BAIRRO',
+        #key_on='feature.properties.BAIRRO',
         fill_color='Reds',
-        legend_name='Casos por bairro'
+        #legend_name='Casos por bairro'
     ).add_to(m)
     folium.LayerControl().add_to(m)
     #mostrar folium map no streamlit
     folium_static(m)
+
+    # Bases de dados da biblioteca Ploty (Gapminder)
+    df = pd.DataFrame(px.data.gapminder())
+    clist = df['country'].unique()
+    st.subheader("PIB per capita ao longo dos anos")
+    country = st.selectbox("Selecione um país:", clist)
+    fig = px.line(df[df['country'] == country],
+                  x="year", y="gdpPercap", title=f'PIB do país: {country}')
+    st.plotly_chart(fig)
+
+    # Gráfico Total de Casos
+    st.subheader(f'Total de casos por bairro.')
+    total_cases_bairro = poverty1['Latest Value']
+    st.line_chart(total_cases_bairro)
 
 
 
