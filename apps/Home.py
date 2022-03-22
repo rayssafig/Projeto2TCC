@@ -11,7 +11,7 @@ def app():
 
     titl, imga = st.columns((4, 1))
     imga.image('E_SDG_logo_UN_emblem_square_trans_WEB.png')
-    titl.title('Objetivos de Desenvolvimento Sustentável da ONU')
+    titl.title('Mapeando Indicadores para os Objetivos de Desenvolvimento Sustentável da ONU')
     st.write('Seja bem-vindo a essa aplicação open-source, reprodutível, para gerenciar e publicar dados e mapas relacionados aos Objetivos de Desenvolvimento Sustentpavel (ODS).')
 
     st.markdown("""

@@ -10,7 +10,7 @@ st.set_page_config(layout='wide', page_title='Objetivos de Desenvolvimento Suste
 apps = MultiApp()
 
 # Adicionando as aplicações
-apps.add_app("Home", Home.app)
+apps.add_app("Página Inicial", Home.app)
 apps.add_app("Erradicação da pobreza", pobreza.app)
 apps.add_app("Fome Zero e Agricultura Sustentável", fome.app)
 apps.add_app("Saúde e Bem-Estar", saude.app)

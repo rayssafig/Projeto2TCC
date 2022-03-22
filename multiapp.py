@@ -54,7 +54,7 @@ class MultiApp:
         default_radio = titles.index(
             app_state["page"]) if "page" in app_state else 0
 
-        st.sidebar.title("Menu dos painéis")
+        st.sidebar.title("Selecione o ODS")
 
         title = st.sidebar.radio(
             "Ir para:", titles, index=default_radio, key="radio")
@@ -68,7 +68,8 @@ class MultiApp:
 
         st.sidebar.title("Sobre")
         st.sidebar.info(
-            "🎈 Essa aplicação é um projeto open-source disponínel no [GitHub](https://github.com/rayssafig/Projeto2TCC) mantida por Rayssa Figueiredo")
+            "Essa aplicação é um projeto _Open-Source_ mantido por [Rayssa Figueiredo](https://github.com/rayssafig)"
+            "🎈 Disponível em: [GitHub](https://github.com/rayssafig/Projeto2TCC) ")
 
         st.sidebar.title("Instituição")
         st.sidebar.info("""Setor Ciências da Terra 
