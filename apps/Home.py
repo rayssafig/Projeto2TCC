@@ -10,14 +10,14 @@ def app():
 
     titl, imga = st.columns((4, 1))
     imga.image('E_SDG_logo_UN_emblem_square_trans_WEB.png')
-    titl.title('Mapeando Indicadores para os Objetivos de Desenvolvimento Sustentável da ONU')
-    st.write('Seja bem-vindo a essa aplicação open-source, reprodutível, para gerenciar e publicar dados e mapas relacionados aos Objetivos de Desenvolvimento Sustentpavel (ODS).')
+    titl.title('Mapeando os Indicadores dos Objetivos de Desenvolvimento Sustentável da ONU')
+    st.write('Seja bem-vindo a essa aplicação _open-source_, reprodutível, para visualizar dados e mapas relacionados aos Objetivos de Desenvolvimento Sustentpavel (ODS) e seus indicadores.')
 
     st.markdown("""
         A aplicação tem o objetivo de apresentar diferentes ***dashboards*** para representar os ODS e seus indicadores, através de mapas interativos, gráficos e demais dados oriundos de fontes livres
-        como [leafmap](https://leafmap.org), [geemap](https://geemap.org), [pydeck](https://deckgl.readthedocs.io), e [kepler.gl](https://docs.kepler.gl/docs/keplergl-jupyter).""")
+        e bibliotecas geoespaciais como [folium](https://python-visualization.github.io/folium/modules.html), [geopandas](https://geopandas.org/), [leafmap](https://leafmap.org), [geemap](https://geemap.org), [pydeck](https://deckgl.readthedocs.io), e [kepler.gl](https://docs.kepler.gl/docs/keplergl-jupyter).""")
 
-    st.info("🚨 **Selecione no menu à esquerda para navegar entre os diferentes ODS** 🚨 ")
+    st.info("🚨 **Selecione no menu à esquerda para navegar entre as diferentes aplicações** 🚨 ")
 
     st.subheader("Introdução")
     st.markdown("""Os Objetivos de Desenvolvimento Sustentável são um apelo global à ação para acabar com a pobreza, proteger o meio ambiente e o clima e garantir que as pessoas, em todos os lugares, possam desfrutar de paz e de prosperidade. 

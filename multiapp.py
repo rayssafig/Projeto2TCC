@@ -1,7 +1,7 @@
 """Frameworks for running multiple Streamlit applications as a single app.
 """
 import streamlit as st
-from PIL import Image
+#from bokeh.models.widgets import Div
 
 # app_state = st.experimental_get_query_params()
 # app_state = {k: v[0] if isinstance(v, list) else v for k, v in app_state.items()} # fetch the first item in each query string as we don't have multiple values for each query string key in this example
@@ -72,8 +72,15 @@ class MultiApp:
             "🎈 Disponível em: [GitHub](https://github.com/rayssafig/Projeto2TCC) ")
 
         st.sidebar.title("Instituição")
-        st.sidebar.info("""Setor Ciências da Terra 
-        \n Departamento de Geomática
-        \n [Engenharia Cartográfica e de Agrimensura](http://www.cartografica.ufpr.br/)""")
 
-        st.sidebar.write("[![UFPR](http://www.ufpr.br/portalufpr/wp-content/uploads/2015/11/ufpr_25.jpg)](https://www.ufpr.br/portalufpr/)")
+        link = '[GitHub](http://github.com)'
+        st.markdown(link, unsafe_allow_html=True)
+
+        st.sidebar.button("Setor de Ciências da Terra", on_click="http://www.terra.ufpr.br/")
+        st.sidebar.info(
+            """🌐 Setor de [Ciência da Terra](http://www.terra.ufpr.br/) 
+            \n 💠 Departamento de [Geomática](http://www.geomatica.ufpr.br/)
+            \n 🌍 [Eng. Cartográfica e de Agrimensura](http://www.cartografica.ufpr.br/)""")
+
+        st.sidebar.write("[![UFPR](http://www.ufpr.br/portalufpr/wp-content/uploads/2015/11/ufpr_logo.jpg)](https://www.ufpr.br/portalufpr/)")
+        #http://www.ufpr.br/portalufpr/wp-content/uploads/2015/11/ufpr_25.jpg
