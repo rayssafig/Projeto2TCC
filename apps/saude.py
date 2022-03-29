@@ -3,13 +3,8 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import pandas as pd
-import pandas
 import requests, zipfile, io
-import xml.etree.ElementTree as Xet
-import os
-import requests
 import xmltodict
-import csv
 
 
 def app(list_of_files=None):

@@ -4,17 +4,6 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import geopandas
-import descartes
-
-import pyproj
-import plotly.graph_objs as go
-
-import csv
-import gzip
-import io
-import json
-from urllib.parse import urlencode, urljoin
-from urllib.request import Request, urlopen
 
 
 def app():

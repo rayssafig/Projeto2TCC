@@ -5,14 +5,6 @@ import geopandas as gpd
 import pandas as pd
 import plotly.express as px
 import requests, zipfile, io
-from plotnine import *
-import matplotlib.pyplot as plt
-import geobr
-from geobr import read_municipality
-from streamlit_observable import observable
-import leafmap.foliumap as leafmap
-
-from geopy.geocoders import Nominatim
 
 
 def app():

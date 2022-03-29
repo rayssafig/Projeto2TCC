@@ -1,7 +1,5 @@
-from random import randint
-
 import streamlit as st
-
+from random import randint
 from streamlit_observable import observable
 import leafmap.foliumap as leafmap
 
@@ -63,8 +61,6 @@ def app():
     imga, titl = st.columns((0.3, 5))
     titl.write('**Redução das desigualdades**')
     imga.image('E-WEB-Goal-10.png')
-
-    #imga.image('')
 
     imga, titl = st.columns((0.3, 5))
     titl.write('**Cidades e comunidades sustentáveis**')
