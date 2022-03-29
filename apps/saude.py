@@ -3,10 +3,16 @@ from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
 import pandas as pd
+import pandas
 import requests, zipfile, io
+import xml.etree.ElementTree as Xet
+import os
+import requests
+import xmltodict
+import csv
 
 
-def app():
+def app(list_of_files=None):
 
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-03.png')
@@ -41,19 +47,21 @@ def app():
         st.write('Reforçar a capacidade de todos os países, particularmente os países em desenvolvimento, para o alerta precoce, redução de riscos e gerenciamento de riscos nacionais e globais de saúde')
 
     st.write('Para este objetivo, serão apresentados dados de **Casos de COVID-19 em Curitiba - PR**')
-    # st.subheader("Secretaria de Saúde de Curitiba")
     st.write('A seguir, o relatório contendo as informações sobre o número de casos de COVID-19 no município de Curitiba.')
 
     url = 'https://ippuc.org.br/geodownloads/SHAPES_SIRGAS/DIVISA_DE_BAIRROS_SIRGAS.zip'
     filename = 'DIVISA_DE_BAIRROS.shp'
-
     r = requests.get(url)
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
-
     df_bairros = gpd.read_file(filename, sep=',')
 
-    casos = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/2022-03-03_Casos_Covid_19_-_Base_de_Dados.csv'
+    url = "http://dadosabertos.c3sl.ufpr.br/curitiba/CasosCovid19/CasosCovid19.xml"
+    response = requests.get(url)
+    data = xmltodict.parse(response.content)
+
+    #casos = 'C:/Users/rayss/PycharmProjects/Projeto2TCC/2022-03-03_Casos_Covid_19_-_Base_de_Dados.csv'
+    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-03-24_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
 
@@ -68,7 +76,8 @@ def app():
     key_on='feature.properties.NOME',
     fill_color='Reds',
     legend_name='Casos por bairro',
-    bins=bins
+    bins=bins,
+    labels={'BAIRRO'}
     ).add_to(m)
 
     folium.LayerControl().add_to(m)

@@ -59,11 +59,13 @@ def app():
     imga, titl = st.columns((0.3, 5))
     titl.write('**Indústria, inovação e infraestrutura**')
     imga.image('E-WEB-Goal-09.png')
-    
+
     imga, titl = st.columns((0.3, 5))
     titl.write('**Redução das desigualdades**')
     imga.image('E-WEB-Goal-10.png')
-    
+
+    #imga.image('')
+
     imga, titl = st.columns((0.3, 5))
     titl.write('**Cidades e comunidades sustentáveis**')
     imga.image('E-WEB-Goal-11.png')
@@ -104,14 +106,11 @@ def app():
                            #targets=["canvas"],
                            #observe=["name"]
                            #)
-#
     #name = observers.get("name")
-#
     #st.write(f"Você está vendo o país: *{name}*")
 
     st.markdown("## Obrigada por utilizar essa aplicação!")
-    st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
-    btn = st.button("Celebrate!")
+    btn = st.button("Yay!")
     if btn:
         st.balloons()
 

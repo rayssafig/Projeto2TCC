@@ -73,10 +73,6 @@ class MultiApp:
 
         st.sidebar.title("Instituição")
 
-        link = '[GitHub](http://github.com)'
-        st.markdown(link, unsafe_allow_html=True)
-
-        st.sidebar.button("Setor de Ciências da Terra", on_click="http://www.terra.ufpr.br/")
         st.sidebar.info(
             """🌐 Setor de [Ciência da Terra](http://www.terra.ufpr.br/) 
             \n 💠 Departamento de [Geomática](http://www.geomatica.ufpr.br/)
