@@ -33,6 +33,7 @@ def app():
     st.write(casos_por_bairro)
     hunger.plot()
     #st.write(pyplot.show())
+
     # Gráfico Total de Casos
     st.subheader(f'Total de casos por bairro.')
     x=hunger['years'].value_counts()

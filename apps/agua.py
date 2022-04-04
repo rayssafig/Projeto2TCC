@@ -49,9 +49,12 @@ def app():
              'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
              'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%.')
 
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
+
     url = 'https://metadados.snirh.gov.br/geonetwork/srv/api/records/0c75f8eb-f5c7-4643-9f91-5bf86a09fb63/attachments/SNIRH_DispHidricaSuperficial.zip'
     filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
-    r = requests.get(url)
+    r = requests.get(url, stream=True, headers=headers)
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     df_pr = gpd.read_file(filename, sep=',')
