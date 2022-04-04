@@ -4,7 +4,8 @@ import folium
 import geopandas as gpd
 import pandas as pd
 import plotly.express as px
-import requests, zipfile, io
+import os
+import requests
 
 
 def app():
@@ -21,29 +22,30 @@ def app():
         st.write(
             '**Proporção da população abaixo da linha de pobreza internacional (em porcentagem):**')
         st.write(
-            'A proporção da população que vive abaixo da linha de pobreza extrema caiu de 22% em 1990 para 4% em 2018.')
+            """A proporção da população que vive abaixo da linha de pobreza extrema caiu de 22% em 1990 para 4% em 2018.
+            O mapa a seguir mostra a taxa (em porcentagem) da população que vive abaixo dessa linha, por país.
+            \n OBS: Os valores são referentes ao último ano de dados disponíveis.""")
 
-        poverty = gpd.read_file(
-            'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SI_POV_DAY1_1_1_1_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
         poverty1 = gpd.read_file(
-            'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SI_POV_DAY1_1_1_1_2020Q2G03/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json')
+            'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SI_POV_DAY1_1_1_1_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
 
-        m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5)
-        folium.Choropleth(
-            geo_data=poverty1,
-            name='Percentual',
-            fill_color='Reds',
-            popup='Latest Value'
+        style = {'fillColor': '#f5f5f5', 'lineColor': '#ffffbf'}
+        st.subheader('Taxa da população que vive abaixo da linha da pobreza por país')
+        m = folium.Map(location=[26.972058, 28.642816],  zoom_start=1.5)
+        folium.GeoJson(
+            poverty1,
+            name='Proporção em %',
+            style_function=lambda x: style,
+            popup="última proporção conhecida: ", tooltip=folium.features.GeoJsonTooltip(fields=['latest_value'], localize=True)
         ).add_to(m)
         folium.LayerControl().add_to(m)
         # Mostrar folium map no streamlit
         folium_static(m)
+        #st.write(poverty1.head())
 
     with st.expander(label='Mapeando o Indicador 1.2'):
-        st.write(
-            '**1.2** Até 2030, reduzir pelo menos à metade a proporção de homens, mulheres e crianças, de todas as idades, que vivem na pobreza, em todas as suas dimensões, de acordo com as definições nacionais')
-        st.write(
-        '**Resultado do PIB per capita dos países, ao longo dos anos:** Mapear situação de renda da população global')
+        st.write('**1.2** Até 2030, reduzir pelo menos à metade a proporção de homens, mulheres e crianças, de todas as idades, que vivem na pobreza, em todas as suas dimensões, de acordo com as definições nacionais')
+        st.write('**Resultado do PIB per capita dos países, ao longo dos anos:** Mapear situação de renda da população global')
 
         # Bases de dados da biblioteca Ploty (Gapminder)
         df = pd.DataFrame(px.data.gapminder())
@@ -54,30 +56,36 @@ def app():
         fig = px.line(df[df['country'] == country],
                       x="year", y="gdpPercap", title=f'Você está visualizando o PIB do país selecionado: {country}')
         st.plotly_chart(fig)
-        st.write(df.head())
-        st.write(clist)
+        #st.write(df.head())
+        #st.write(clist)
 
-        #mapa = gpd.read_file('https://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/Baker_Global_Country_Codes/FeatureServer?f=pjson')
-
-        url = 'https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural' \
-              '/ne_110m_admin_0_countries.zip '
+        # Let's spoof a common user-agent (e.g. Chrome 74 / Windows 10).
+        # Doing so will fool Apache into thinking that we're making a request
+        # via the Chrome web browser.
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
+        url = 'http://www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip'
+        request = requests.get(url, stream=True, headers=headers)
         filename = 'ne_110m_admin_0_countries.shp'
-        r = requests.get(url)
-        z = zipfile.ZipFile(io.BytesIO(r.content))
-        z.extractall()
-        mapa = gpd.read_file(filename, sep=';')
-        #mapa = gpd.read_file('https://github.com/datasets/geo-countries/blob/master/data/countries.geojson')
-        #ISO3166-1-Alpha-3
 
+        # Use the url to determine the filename to save the data as.
+        # Finally, write out the streamed data as binary data.
+        zip_filename = os.path.basename(url)
+        with open(zip_filename, 'wb') as zfile:
+            zfile.write(request.content)
+            #zfile.extractall()
+
+        mapa = gpd.read_file(filename, sep=';')
         m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5)
         folium.Choropleth(
             geo_data=mapa,
             name='Casos por bairro',
-            data=df,
-            #columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'],
-            key_on='feature.properties.Alpha-3_code_ISO3166-1',
+            #data=casos_por_bairro,
+            columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'], #coluna
+            key_on='feature.properties.ISO3166-1-Alpha-3',
             fill_color='Reds',
             legend_name='Casos por bairro',
+            #bins=bins,
             #labels={'BAIRRO'}
         ).add_to(m)
         folium_static(m)
@@ -90,9 +98,10 @@ def app():
         st.write('**1.a** Garantir uma mobilização significativa de recursos a partir de uma variedade de fontes, inclusive por meio do reforço da cooperação para o desenvolvimento, para proporcionar meios adequados e previsíveis para que os países em desenvolvimento, em particular os países menos desenvolvidos, implementem programas e políticas para acabar com a pobreza em todas as suas dimensões')
         st.write('**1.b** Criar marcos políticos sólidos em níveis nacional, regional e internacional, com base em estratégias de desenvolvimento a favor dos pobres e sensíveis a gênero, para apoiar investimentos acelerados nas ações de erradicação da pobreza')
 
-    st.info("""Fonte de dados:
-            \n **UN DESA Statistics Division**, disponível em: https://unstats.un.org/sdgs/metadata/
-            \n **Gapminder**, biblioteca Ploty, disponível em: https://www.gapminder.org/""")
+    st.subheader('Fonte dos dados')
+    st.info("""
+            \n Dados referentes aos indicadores de pobreza globais são disponibilizados pela [**UN DESA Statistics Division**](https://unstats.un.org/sdgs/metadata/)
+            \n Dados de PIB global são disponibilizados pelo [**Gapminder**](https://www.gapminder.org/), através da biblioteca Ploty.""")
     # Gráfico Total de Casos
     #geobr.list_geobr()
     #df = geobr.read_state(code_state="DF", year=2020)
