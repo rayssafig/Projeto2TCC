@@ -51,6 +51,8 @@ def app():
 
     url = "http://dadosabertos.c3sl.ufpr.br/curitiba/CasosCovid19/CasosCovid19.xml"
     response = requests.get(url)
+    #data = response.xml()
+    #st.write('CEP: {}'.format(data['dados']))
     data = xmltodict.parse(response.content)
 
     casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-01_Casos_Covid_19_-_Base_de_Dados.csv'
@@ -103,6 +105,7 @@ def app():
                            value=5, step=1)
     st.write(f'**Resumo dos últimos {table_days} casos de COVID-19.**')
     a = df_casos.iloc[-table_days:, -8:]
+    my_table = st.table(a)
 
     # Gráfico Total de Casos
     st.subheader(f'Total de casos por bairro.')

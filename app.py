@@ -1,6 +1,6 @@
 import streamlit as st
 from multiapp import MultiApp
-from apps import (saude, Home, pobreza, fome, genero, agua)
+from apps import (saude, Home, pobreza, fome, genero, agua, educacao)
 from PIL import Image
 
 # Definindo o ícone e titulo da página
@@ -13,6 +13,7 @@ apps = MultiApp()
 apps.add_app("Página Inicial", Home.app)
 apps.add_app("Erradicação da pobreza", pobreza.app)
 apps.add_app("Fome Zero e Agricultura Sustentável", fome.app)
+apps.add_app("Educação de qualidade", educacao.app)
 apps.add_app("Saúde e Bem-Estar", saude.app)
 apps.add_app("Igualdade de Gênero", genero.app)
 apps.add_app("Água potável e saneamento", agua.app)

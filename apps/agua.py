@@ -3,6 +3,7 @@ import geopandas as gpd
 from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
+from pathlib import Path
 
 
 def app():
@@ -73,11 +74,8 @@ def app():
         labels={'BAIRRO'},
         style=folium.vector_layers.path_options(line=True, radius=False, color='Blues')
     ).add_to(m)
-
     folium.LayerControl().add_to(m)
     folium_static(m)
-
-
 
     m = folium.Map(location=[-3.3, -61.9], tiles=None,
                    zoom_start=4, control_scale=True)
@@ -87,6 +85,6 @@ def app():
                             version='1.3.0',
                             attr="NASA EOSDIS GIBS"
                             )
-
     w.add_to(m)
     folium_static(m)
+
