@@ -4,8 +4,7 @@ import folium
 import geopandas as gpd
 import pandas as pd
 import plotly.express as px
-import os
-import requests
+import requests, zipfile, io
 
 
 def app():
@@ -16,6 +15,15 @@ def app():
     st.subheader('Objetivo 1: Erradicar a pobreza em todas as formas e em todos os lugares')
     st.write('Cada ODS apresenta uma série de indicadores, que representam objetivos menores que auxiliam a atingir o objetivo principal. '
              'Você pode visualizar todos os indicadores criados para esse ODS, expandindo a seção a seguir.')
+
+    with st.expander(label='Indicadores do Objetivo 1'):
+        st.write('**1.1** Até 2030, erradicar a pobreza extrema para todas as pessoas em todos os lugares, atualmente medida como pessoas vivendo com menos de US$ 1,90 por dia')
+        st.write('**1.2** Até 2030, reduzir pelo menos à metade a proporção de homens, mulheres e crianças, de todas as idades, que vivem na pobreza, em todas as suas dimensões, de acordo com as definições nacionais')
+        st.write('**1.3** Implementar, em nível nacional, medidas e sistemas de proteção social adequados, para todos, incluindo pisos, e até 2030 atingir a cobertura substancial dos pobres e vulneráveis')
+        st.write('**1.4** Até 2030, garantir que todos os homens e mulheres, particularmente os pobres e vulneráveis, tenham direitos iguais aos recursos econômicos, bem como o acesso a serviços básicos, propriedade e controle sobre a terra e outras formas de propriedade, herança, recursos naturais, novas tecnologias apropriadas e serviços financeiros, incluindo microfinanças')
+        st.write('**1.5** Até 2030, construir a resiliência dos pobres e daqueles em situação de vulnerabilidade, e reduzir a exposição e vulnerabilidade destes a eventos extremos relacionados com o clima e outros choques e desastres econômicos, sociais e ambientais')
+        st.write('**1.a** Garantir uma mobilização significativa de recursos a partir de uma variedade de fontes, inclusive por meio do reforço da cooperação para o desenvolvimento, para proporcionar meios adequados e previsíveis para que os países em desenvolvimento, em particular os países menos desenvolvidos, implementem programas e políticas para acabar com a pobreza em todas as suas dimensões')
+        st.write('**1.b** Criar marcos políticos sólidos em níveis nacional, regional e internacional, com base em estratégias de desenvolvimento a favor dos pobres e sensíveis a gênero, para apoiar investimentos acelerados nas ações de erradicação da pobreza')
 
     with st.expander(label='Mapeando o Indicador 1.1'):
         st.write('**1.1** Até 2030, erradicar a pobreza extrema para todas as pessoas em todos os lugares, atualmente medida como pessoas vivendo com menos de US$ 1,90 por dia')
@@ -59,49 +67,60 @@ def app():
         #st.write(df.head())
         #st.write(clist)
 
-        # Let's spoof a common user-agent (e.g. Chrome 74 / Windows 10).
-        # Doing so will fool Apache into thinking that we're making a request
-        # via the Chrome web browser.
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
-        url = 'http://www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip'
-        request = requests.get(url, stream=True, headers=headers)
+        url = 'http://www.labgeolivre.ufpr.br/arquivos/ne_110m_admin_0_countries.zip'
         filename = 'ne_110m_admin_0_countries.shp'
+        r = requests.get(url)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        z.extractall()
+        mapa = gpd.read_file(filename, sep=',')
+        casos = df.groupby("iso_alpha")[['country']].count().reset_index()
+        #st.write(casos)
+        Join = pd.merge(mapa, df, left_on="ISO_A3", right_on="iso_alpha")
+        #st.write(Join.head())
 
-        # Use the url to determine the filename to save the data as.
-        # Finally, write out the streamed data as binary data.
-        zip_filename = os.path.basename(url)
-        with open(zip_filename, 'wb') as zfile:
-            zfile.write(request.content)
-            #zfile.extractall()
-
-        mapa = gpd.read_file(filename, sep=';')
+        st.subheader('**Veja o PIB per capita por país no mapa:**')
         m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5)
+        bins = df[df['country'] == {country}]
         folium.Choropleth(
             geo_data=mapa,
-            name='Casos por bairro',
-            #data=casos_por_bairro,
-            columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'], #coluna
-            key_on='feature.properties.ISO3166-1-Alpha-3',
+            name='Países',
+            #data=Join,
+            columns=['gdpPercap', 'country'], #coluna
+            key_on='feature.properties.ISO_A3',
             fill_color='Reds',
             legend_name='Casos por bairro',
-            #bins=bins,
-            #labels={'BAIRRO'}
+            bins=bins,
+            labels={'NAME'}
         ).add_to(m)
+        style_function = lambda x: {'fillColor': '#ffffff',
+                                    'color': '#000000',
+                                    'fillOpacity': 0,
+                                    'weight': 0.1}
+        highlight_function = lambda x: {'fillColor': '#000000',
+                                        'color': '#000000',
+                                        'fillOpacity': 0,
+                                        'weight': 0.1}
+        NIL = folium.features.GeoJson(
+            Join,
+            style_function=style_function,
+            control=False,
+            highlight_function=highlight_function,
+            tooltip=folium.features.GeoJsonTooltip(
+                fields=['NAME', 'gdpPercap'],
+                aliases=['Nome do país: ', 'PIB per capita:'],
+                style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"))
+        )
+        m.add_child(NIL)
+        m.keep_in_front(NIL)
+        folium.LayerControl().add_to(m)
         folium_static(m)
 
 
-    with st.expander(label='Demais Indicadores do Objetivo 1'):
-        st.write('**1.3** Implementar, em nível nacional, medidas e sistemas de proteção social adequados, para todos, incluindo pisos, e até 2030 atingir a cobertura substancial dos pobres e vulneráveis')
-        st.write('**1.4** Até 2030, garantir que todos os homens e mulheres, particularmente os pobres e vulneráveis, tenham direitos iguais aos recursos econômicos, bem como o acesso a serviços básicos, propriedade e controle sobre a terra e outras formas de propriedade, herança, recursos naturais, novas tecnologias apropriadas e serviços financeiros, incluindo microfinanças')
-        st.write('**1.5** Até 2030, construir a resiliência dos pobres e daqueles em situação de vulnerabilidade, e reduzir a exposição e vulnerabilidade destes a eventos extremos relacionados com o clima e outros choques e desastres econômicos, sociais e ambientais')
-        st.write('**1.a** Garantir uma mobilização significativa de recursos a partir de uma variedade de fontes, inclusive por meio do reforço da cooperação para o desenvolvimento, para proporcionar meios adequados e previsíveis para que os países em desenvolvimento, em particular os países menos desenvolvidos, implementem programas e políticas para acabar com a pobreza em todas as suas dimensões')
-        st.write('**1.b** Criar marcos políticos sólidos em níveis nacional, regional e internacional, com base em estratégias de desenvolvimento a favor dos pobres e sensíveis a gênero, para apoiar investimentos acelerados nas ações de erradicação da pobreza')
-
-    st.subheader('Fonte dos dados')
+    st.subheader('Fonte dos dados:')
     st.info("""
-            \n Dados referentes aos indicadores de pobreza globais são disponibilizados pela [**UN DESA Statistics Division**](https://unstats.un.org/sdgs/metadata/)
-            \n Dados de PIB global são disponibilizados pelo [**Gapminder**](https://www.gapminder.org/), através da biblioteca Ploty.""")
+            \n 🔍 Conjunto de dados espaciais de domínio público [Natural Earth](https://www.naturalearthdata.com/downloads/)
+            \n 🔍 Divisão de Estatística das Nações Unidas [UN DESA Statistics Division](https://unstats.un.org/sdgs/dataportal)
+            \n 🔍 Dados da biblioteca Ploty [Gapminder](https://www.gapminder.org/)""")
     # Gráfico Total de Casos
     #geobr.list_geobr()
     #df = geobr.read_state(code_state="DF", year=2020)

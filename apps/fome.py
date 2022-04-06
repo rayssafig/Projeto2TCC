@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 
 
+
 def app():
     global data
     titl, imga = st.columns((4, 0.8))

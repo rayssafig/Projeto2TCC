@@ -41,8 +41,12 @@ def app():
     # Fonte: IPEA DATA - Instituto de Pesquisa Econômica Aplicada
     tabela = 'http://www.labgeolivre.ufpr.br/arquivos/ipeadata_04-04-2022-09-10_.csv'
     df_casos = pd.read_csv(tabela, encoding='utf-8', delimiter=',')
-    # casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
-    st.write(df_casos.head())
+    #casos= df_BR.groupby("NM_UF")[['NM_REGIAO']].count().reset_index()
+    #st.write(casos)
+    #st.write(df_casos.head())
+
+    st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE no último censo realizado no país.')
+    st.subheader('Taxa de analfabetismo por estado brasileiro')
 
     m = folium.Map(location=[-12.9, -50.4], zoom_start=4)
     bins = list(df_casos['2,014.00'].quantile([0, 0.25, 0.5, 0.75, 1]))
@@ -52,7 +56,7 @@ def app():
         data=df_casos,
         columns=['Estado', '2,014.00'],
         key_on='feature.properties.NM_UF',
-        fill_color='Reds',
+        fill_color='YlOrRd',
         legend_name='Analfabetos (%) pessoas com 15 anos ou mais',
         bins=bins,
         # labels={'BAIRRO'},
@@ -80,5 +84,13 @@ def app():
     m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
+    st.write('**OBS:** AAA')
+
+
+    st.subheader('Fonte dos dados')
+    st.info("""
+        \n [IPEA - Instituto de Pesquisa Econômica Aplicada](http://www.ipeadata.gov.br/Default.aspx).
+        \n [IBGE - Instituto Brasileiro de Geografia e Estatística](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html?=&t=acesso-ao-produto).""")
+
 
 
