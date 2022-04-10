@@ -1,7 +1,7 @@
 """Frameworks for running multiple Streamlit applications as a single app.
 """
 import streamlit as st
-
+from PIL import Image
 
 class MultiApp:
     """Framework for combining multiple streamlit applications.
@@ -46,7 +46,10 @@ class MultiApp:
         default_radio = titles.index(
             app_state["page"]) if "page" in app_state else 0
 
-        st.sidebar.title("Selecione o ODS")
+        with st.sidebar.container():
+            image = Image.open("SDG Wheel_PRINT_Transparent.png")
+            st.image(image, width=180, use_column_width = False)
+
         title = st.sidebar.radio(
             "Ir para:", titles, index=default_radio, key="radio")
 

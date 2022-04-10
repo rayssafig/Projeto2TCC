@@ -4,6 +4,8 @@ from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
 from pathlib import Path
+import leafmap.foliumap as leafmap
+import ast
 
 
 def app():
@@ -33,7 +35,7 @@ def app():
     # Dados oriundos do GEO INFO - EMBRAPA - Rede de drenagem região semiárida de Alagoas
     st.subheader('Rede de drenagem região semiárida de Alagoas')
     drenagem = gpd.read_file('http://geoinfo.cnps.embrapa.br/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode%3Ahidrografia&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature')
-    m = folium.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9)
+    m = folium.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9, control_scale=True)
     folium.Choropleth(
         geo_data=drenagem,
         name='Percentual',
@@ -50,32 +52,6 @@ def app():
              'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
              'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%.')
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
-
-    url = 'https://metadados.snirh.gov.br/geonetwork/srv/api/records/0c75f8eb-f5c7-4643-9f91-5bf86a09fb63/attachments/SNIRH_DispHidricaSuperficial.zip'
-    filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
-    r = requests.get(url, stream=True, headers=headers)
-    z = zipfile.ZipFile(io.BytesIO(r.content))
-    z.extractall()
-    df_pr = gpd.read_file(filename, sep=',')
-
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4)
-    bins = list(df_pr['dispq95'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
-    folium.Choropleth(
-        geo_data=df_pr,
-        name='Casos por bairro',
-        #data=casos_por_bairro,
-        columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'],
-        key_on='feature.properties.NOME',
-        fill_color='Blues',
-        legend_name='Casos por bairro',
-        bins=bins,
-        labels={'BAIRRO'},
-        style=folium.vector_layers.path_options(line=True, radius=False, color='Blues')
-    ).add_to(m)
-    folium.LayerControl().add_to(m)
-    folium_static(m)
 
     m = folium.Map(location=[-3.3, -61.9], tiles=None,
                    zoom_start=4, control_scale=True)
@@ -88,3 +64,22 @@ def app():
     w.add_to(m)
     folium_static(m)
 
+    @st.cache
+    def get_layers(url1):
+        options = leafmap.get_wms_layers(url1)
+        return options
+
+    layers = None
+    url1 = 'https://geo.socioambiental.org/webadaptor2/services/raisg/raisg_tis_d/MapServer/WMSServer?request=GetCapabilities&service=WMS'
+    m = leafmap.Map(center=(36.3, 0), zoom=2, control_scale=True)
+    if layers is not None:
+        for layer in layers:
+            m.add_wms_layer(
+                url1, layers=layer, name=layer, attribution=" ", transparent=True
+            )
+    m.to_streamlit(800,600)
+    folium_static(m)
+
+    st.subheader('Fonte dos dados:')
+    st.info("""
+            \n 🔍 """)

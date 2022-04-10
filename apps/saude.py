@@ -4,7 +4,6 @@ import folium
 import geopandas as gpd
 import pandas as pd
 import requests, zipfile, io
-import xmltodict
 
 
 def app():
@@ -49,18 +48,13 @@ def app():
     z.extractall()
     df_bairros = gpd.read_file(filename, sep=',')
 
-    url = "http://dadosabertos.c3sl.ufpr.br/curitiba/CasosCovid19/CasosCovid19.xml"
-    response = requests.get(url)
-    #data = response.xml()
-    #st.write('CEP: {}'.format(data['dados']))
-    data = xmltodict.parse(response.content)
-
-    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-01_Casos_Covid_19_-_Base_de_Dados.csv'
+    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-06_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
+    join = pd.merge(df_bairros, df_casos, left_on="NOME", right_on="BAIRRO")
 
     st.subheader('Mapa de casos da doença por bairro de Curitiba - PR')
-    m = folium.Map(location=[-25.5, -49.3], tiles='Stamen Terrain', zoom_start=11)
+    m = folium.Map(location=[-25.5, -49.3], tiles='Stamen Terrain', zoom_start=11, control_scale=True)
     bins = list(casos_por_bairro['CLASSIFICAÇÃO FINAL'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
     folium.Choropleth(
         geo_data=df_bairros,
@@ -120,6 +114,6 @@ def app():
 
     st.subheader('Fonte dos dados')
     st.info("""
-        \n Os dados de **COVID-19** estão disponíveis no [Portal de dados abertos](https://www.curitiba.pr.gov.br/dadosabertos/) da Prefeitura Municipal de Curitiba.
-        \n Os **dados espaciais** do município são disponibilizados pelo [IPPUC](https://ippuc.org.br/geodownloads) - Instituto de Pesquisa e Planejamento Urbano de Curitiba.""")
+        \n 🔍 Os dados de **COVID-19** estão disponíveis no [Portal de dados abertos](https://www.curitiba.pr.gov.br/dadosabertos/) da Prefeitura Municipal de Curitiba.
+        \n 🔍 Os **dados espaciais** do município são disponibilizados pelo [IPPUC](https://ippuc.org.br/geodownloads) - Instituto de Pesquisa e Planejamento Urbano de Curitiba.""")
 

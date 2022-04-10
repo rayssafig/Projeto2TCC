@@ -36,14 +36,14 @@ def app():
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     df_BR = gpd.read_file(filename, sep=',')
-    st.write(df_BR.head())
+    #st.write(df_BR.head())
 
     # Fonte: IPEA DATA - Instituto de Pesquisa Econômica Aplicada
     tabela = 'http://www.labgeolivre.ufpr.br/arquivos/ipeadata_04-04-2022-09-10_.csv'
     df_casos = pd.read_csv(tabela, encoding='utf-8', delimiter=',')
-    #casos= df_BR.groupby("NM_UF")[['NM_REGIAO']].count().reset_index()
     #st.write(casos)
     #st.write(df_casos.head())
+    Join = pd.merge(df_BR, df_casos, left_on="SIGLA", right_on="Sigla")
 
     st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE no último censo realizado no país.')
     st.subheader('Taxa de analfabetismo por estado brasileiro')
@@ -69,28 +69,44 @@ def app():
                                     'color': '#000000',
                                     'fillOpacity': 0,
                                     'weight': 0.1}
-
     NIL = folium.features.GeoJson(
-        df_BR,
+        Join,
         style_function=style_function,
         control=False,
         highlight_function=highlight_function,
         tooltip=folium.features.GeoJsonTooltip(
-            fields=['NM_UF'],
-            aliases=['UF: '],
+            fields=['NM_UF', '2,014.00'],
+            aliases=['UF: ', 'Taxa (%):'],
             style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"))
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
-    st.write('**OBS:** AAA')
+    st.write('**OBS:** As informações sobre as taxas de analfabetismo por Unidade de Federação foram obtidas no último censo realizado no país, em 2010.')
 
+    st.write(Join.head())
+    casos= df_BR.groupby("NM_UF")[['NM_REGIAO']].count().reset_index()
+    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
+    bins = list(Join['2,014.00'].quantile([0, 0.25, 0.5, 0.75, 1]))
+    folium.Choropleth(
+        geo_data=Join,
+        name='Analfabetos',
+        data=casos,
+        columns=['NM_REGIAO', '2,014.00'],
+        key_on='feature.properties.NM_UF',
+        fill_color='YlOrRd',
+        legend_name='Analfabetos (%) pessoas com 15 anos ou mais',
+        bins=bins,
+        # labels={'BAIRRO'},
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
+    folium_static(m)
 
     st.subheader('Fonte dos dados')
     st.info("""
-        \n [IPEA - Instituto de Pesquisa Econômica Aplicada](http://www.ipeadata.gov.br/Default.aspx).
-        \n [IBGE - Instituto Brasileiro de Geografia e Estatística](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html?=&t=acesso-ao-produto).""")
+        \n 🔍 [IPEA - Instituto de Pesquisa Econômica Aplicada](http://www.ipeadata.gov.br/Default.aspx).
+        \n 🔍 [IBGE - Instituto Brasileiro de Geografia e Estatística](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html?=&t=acesso-ao-produto).""")
 
 
 

@@ -106,7 +106,7 @@ def app():
     #st.write(f"Você está vendo o país: *{name}*")
 
     st.markdown("## Obrigada por utilizar essa aplicação!")
-    st.info('Essa aplicação usa a biblioteca **Streamlit**. Disponível no [GitHub](https://github.com/rayssafig/Projeto2TCC)')
+    st.info('Essa aplicação usa a biblioteca **Streamlit**. O código fonte encontra-se disponível no [GitHub](https://github.com/rayssafig/Projeto2TCC) 👾')
     btn = st.button("Yay!")
     if btn:
         st.balloons()
