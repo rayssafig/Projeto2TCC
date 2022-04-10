@@ -4,6 +4,17 @@ import geopandas as gpd
 import pandas as pd
 from streamlit_folium import folium_static
 import folium
+import plotly.express as px
+import functools
+
+chart = functools.partial(st.plotly_chart, use_container_width=True)
+COMMON_ARGS = {
+    "color": "Sigla",
+    "color_discrete_sequence": px.colors.sequential.Viridis,
+    "hover_data": [
+        '2,014.00',
+    ],
+}
 
 
 def app():
@@ -56,7 +67,7 @@ def app():
         data=df_casos,
         columns=['Estado', '2,014.00'],
         key_on='feature.properties.NM_UF',
-        fill_color='YlOrRd',
+        fill_color='PRGn',
         legend_name='Analfabetos (%) pessoas com 15 anos ou mais',
         bins=bins,
         # labels={'BAIRRO'},
@@ -85,23 +96,12 @@ def app():
     folium_static(m)
     st.write('**OBS:** As informações sobre as taxas de analfabetismo por Unidade de Federação foram obtidas no último censo realizado no país, em 2010.')
 
-    st.write(Join.head())
-    casos= df_BR.groupby("NM_UF")[['NM_REGIAO']].count().reset_index()
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
-    bins = list(Join['2,014.00'].quantile([0, 0.25, 0.5, 0.75, 1]))
-    folium.Choropleth(
-        geo_data=Join,
-        name='Analfabetos',
-        data=casos,
-        columns=['NM_REGIAO', '2,014.00'],
-        key_on='feature.properties.NM_UF',
-        fill_color='YlOrRd',
-        legend_name='Analfabetos (%) pessoas com 15 anos ou mais',
-        bins=bins,
-        # labels={'BAIRRO'},
-    ).add_to(m)
-    folium.LayerControl().add_to(m)
-    folium_static(m)
+    #Gráfico de pizza
+    #st.write(df_casos)
+    st.subheader(f'Taxa de analfabetismo por  Região')
+    fig = px.pie(Join, values="2,014.00", names="NM_REGIAO", **COMMON_ARGS)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
 
     st.subheader('Fonte dos dados')
     st.info("""

@@ -83,8 +83,8 @@ def app():
     mapa = gpd.read_file(filename, sep=',')
     #st.write(casos)
     group = df.groupby('country')[['iso_alpha']].count()
-    #st.write(group)
-    Join = pd.merge(mapa, df, left_on="ISO_A3", right_on="iso_alpha")
+    st.write(group)
+    Join = pd.merge(mapa, df, left_on="ISO_A3_EH", right_on="iso_alpha")
     casos = Join.groupby("gdpPercap")[['country']].count().reset_index()
     #st.write(Join.head(-2))
     st.write(mapa.head(2))
@@ -93,7 +93,7 @@ def app():
     m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
     bins = list(mapa['POP_EST'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
     folium.Choropleth(
-        geo_data=mapa,
+        geo_data=Join,
         name='Países',
         #data=df,
         #columns=['country', 'gdpPercap'], #coluna
