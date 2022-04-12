@@ -1,5 +1,6 @@
 import streamlit as st
 import geopandas as gpd
+import pandas as pd
 from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
@@ -45,23 +46,36 @@ def app():
     # Mostrar folium map no streamlit
     folium_static(m)
 
-    #terras = gpd.read_file('https://geo.socioambiental.org/webadaptor2/services/raisg/raisg_tis_d/MapServer/WMSServer?request=GetCapabilities&service=WMS')
-    st.subheader('Disponibilidade Hídrica Superficial do Brasil')
-    st.write('No cálculo da estimativa da disponibilidade hídrica de águas superficiais no Brasil, foi adotada a vazão de restrição dos reservatórios, '
-             'acrescida do incremental da vazão de estiagem (vazão com permanência de 95%) para os trechos regularizados (quando não se dispunha da informação '
-             'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
-             'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%.')
+    API_key = 'a68baa372ad3b37c3ec0e77c4d7ce0b3'
+    #request = requests.get('http://api.openweathermap.org/geo/1.0/reverse?lat={}&lon={lon}&limit={limit}&appid={API_key}'.format(lat) )
 
+    'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid={API key}'
 
-    m = folium.Map(location=[-3.3, -61.9], tiles=None,
-                   zoom_start=4, control_scale=True)
+    LOCATION = '*******'
+    # lat=-25.480877 e lon=-49.304424
+    #LATITUDE = st.text_input("Search for a lat:", "")
+    LATITUDE = '-25.480877'
+    LONGITUDE = '-49.304424'
+    UNITS = 'imperial'
+    CSV_OPTION = True  # if csv_option == True, a weather data will be appended to 'record.csv'
+    BASE_URL = 'http://api.openweathermap.org/data/2.5/onecall?'
+    URL = BASE_URL + 'lat=' + LATITUDE + '&lon=' + LONGITUDE + '&units=' + UNITS + '&appid=' + API_key
 
-    w = folium.WmsTileLayer(url='https://geo.socioambiental.org/webadaptor2/services/raisg/raisg_tis_d/MapServer/WMSServer?request=GetCapabilities&service=WMS',
-                            layers='MODIS_Terra_CorrectedReflectance_TrueColor',
-                            version='1.3.0',
-                            attr="NASA EOSDIS GIBS"
-                            )
-    w.add_to(m)
+    response = requests.get(URL)
+    st.write(response)
+    data = response.json()
+    st.write(data)
+    gdf = pd.read_json(response)
+
+    style = {'fillColor': '#f5f5f5', 'lineColor': '#ffffbf'}
+    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
+    folium.GeoJson(
+        gdf,
+        name='Proporção em %',
+        style_function=lambda x: style,
+        popup="última proporção conhecida: ",
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
     folium_static(m)
 
     @st.cache

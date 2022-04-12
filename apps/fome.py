@@ -10,8 +10,16 @@ from matplotlib import pyplot
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import plotly.express as px
-import matplotlib
-from matplotlib.backends.backend_agg import RendererAgg
+import functools
+
+chart = functools.partial(st.plotly_chart, use_container_width=True)
+COMMON_ARGS = {
+    "color": "parentName",
+    "color_discrete_sequence": px.colors.sequential.Cividis,
+    "hover_data": [
+        'latest_value',
+    ],
+}
 
 
 def app():
@@ -59,38 +67,26 @@ def app():
     st.write(hunger)
     st.write(pol_par)
 
+    filepath = gpd.read_file(
+        "https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/AG_PRD_FIESSIN_2_1_2_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
+
     # Gráfico Total de Casos
     st.subheader(f'Total de casos por bairro.')
-    total_cases_bairro = hunger['parentName'].value_counts()
+    total_cases_bairro = filepath['sex_desc'].value_counts()
     st.bar_chart(total_cases_bairro)
 
-    matplotlib.use("agg")
-    _lock = RendererAgg.lock
+    st.subheader(f'Taxa de analfabetismo por  Região')
+    crop = filepath['sex_desc']
+    fig = px.pie(filepath, values="latest_value", names="sex_desc", **COMMON_ARGS)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
 
-    row0_spacer1, row0_1, row0_spacer2, row0_2, row0_spacer3 = st.columns((0.2, 1, .2, 1, .2))
-    with row0_1, _lock:
-        st.header("Political parties")
-        fig, ax = plt.subplots(figsize=(5, 5))
-        ax.pie(pol_par, labels=(pol_par.index + ' (' + pol_par.map(str)
-                                + ')'), wedgeprops={'linewidth': 7, 'edgecolor': 'white'
-                                                    }, colors=colors)
-        # display a white circle in the middle of the pie chart
-        p = plt.gcf()
-        p.gca().add_artist(plt.Circle((0, 0), 0.7, color='white'))
-        st.pyplot(fig)
-
-    filepath = "http://www.labgeolivre.ufpr.br/arquivos/Prevalence_of_undernourishment_percent.csv"
-    df_hunger = pd.read_csv(filepath, engine= 'python', header=None, sep=',', error_bad_lines=False, encoding='utf-8')
-    m = leafmap.Map(tiles="stamentoner")
-    m.add_heatmap(
-        df_hunger,
-        #latitude="Y",
-        #longitude="X",
-        #value="latest_value",
-        #name="Heat map",
-        #radius=20,
+    st.subheader("Value of each Symbol per Account")
+    fig = px.sunburst(
+        filepath, path=["age_desc", "sex_desc"], values="latest_value", **COMMON_ARGS
     )
-    m.to_streamlit(width=700, height=500)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
 
     st.subheader('Fonte dos dados:')
     st.info("""

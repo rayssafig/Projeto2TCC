@@ -62,7 +62,7 @@ def app():
         data=casos_por_bairro,
         columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'],
         key_on='feature.properties.NOME',
-        fill_color='Blues',
+        fill_color='BuPu',
         legend_name='Casos por bairro',
         bins=bins,
         labels={'BAIRRO'},

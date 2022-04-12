@@ -47,8 +47,9 @@ class MultiApp:
             app_state["page"]) if "page" in app_state else 0
 
         with st.sidebar.container():
+            st.title('Cartografia para os ODS')
             image = Image.open("SDG Wheel_PRINT_Transparent.png")
-            st.image(image, width=180, use_column_width = False)
+            st.image(image, width=185, use_column_width = False)
 
         title = st.sidebar.radio(
             "Ir para:", titles, index=default_radio, key="radio")
