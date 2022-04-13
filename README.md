@@ -20,7 +20,7 @@ Com o uso de API e dados geoespaciais, a aplicação é um modelo reprodutível 
 
 ## 👩‍🔬 Autores
 
-* Desenvolvedora - [Rayssa Figueiredo de Medeiros](https://github.com/rayssafig)
+* Desenvolvimento - [Rayssa Figueiredo de Medeiros](https://github.com/rayssafig)
 * Orientação - [Silvana Philippi Camboim](https://github.com/SilvanaCamboim)
 
 ## 🏛 Instituição
