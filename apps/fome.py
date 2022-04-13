@@ -90,4 +90,4 @@ def app():
 
     st.subheader('Fonte dos dados:')
     st.info("""
-                \n 🔍 """)
+            \n 🔍 Divisão de Estatística das Nações Unidas [UN DESA Statistics Division](https://unstats.un.org/sdgs/dataportal)""")
