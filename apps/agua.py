@@ -3,7 +3,7 @@ import geopandas as gpd
 from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
-import leafmap.foliumap as leafmap
+import matplotlib.pyplot as plt
 
 
 def app():
@@ -44,19 +44,14 @@ def app():
              'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
              'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%.')
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
-
-    url = 'https://metadados.snirh.gov.br/geonetwork/srv/api/records/0c75f8eb-f5c7-4643-9f91-5bf86a09fb63/attachments/SNIRH_DispHidricaSuperficial.zip'
+    url = 'http://www.labgeolivre.ufpr.br/arquivos/SNIRH_DispHidricaSuperficial.zip'
     filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
     r = requests.get(url)
-    r = requests.get(url, stream=True, headers=headers)
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     disp_agua = gpd.read_file(filename, sep=',')
 
     m = folium.Map(location=[-12.9, -50.4], zoom_start=4)
-    #bins = list(disp_agua['dispq95'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
     folium.Choropleth(
         disp_agua[disp_agua.geometry.length > 0.001],
         line_weight=1,
@@ -65,6 +60,14 @@ def app():
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write(disp_agua.head())
+
+    # Gráficos
+    #st.line_chart(disp_agua['dispq95'])
+    st.subheader('Total de casos por bairro.')
+    #total_cases_bairro = disp_agua['dispq95'].value_counts()
+    #st.bar_chart(total_cases_bairro)
+    plt.plot(disp_agua['nmrio'], disp_agua['id'])
+    plt.show()
 
     st.subheader('Fonte dos dados:')
     st.info("""

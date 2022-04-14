@@ -1,14 +1,7 @@
-import pandas as pd
 import streamlit as st
 from streamlit_folium import folium_static
 import folium
 import geopandas as gpd
-import requests, zipfile, io
-import leafmap.foliumap as leafmap
-import geopandas
-from matplotlib import pyplot
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
 import plotly.express as px
 import functools
 
@@ -58,35 +51,46 @@ def app():
     folium.LayerControl().add_to(m)
     folium_static(m)
 
-    #pol_par = hunger['latest_value'].value_counts()
-    pol_par = hunger.groupby("geoAreaName")[['latest_value']].sum().reset_index()
-    # merge the two dataframe to get a column with the color
-    df = pd.concat([pd.DataFrame(pol_par), hunger])
-    colors = df['ISO3'].tolist()
-    #st.write(pol_par)
-    st.write(hunger)
-    st.write(pol_par)
+    pol_par = hunger.groupby("parentName")[['latest_value']].sum().reset_index()
+    pol_par1 = hunger.groupby("geoAreaName")[['latest_value']].sum().reset_index()
+
 
     filepath = gpd.read_file(
         "https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/AG_PRD_FIESSIN_2_1_2_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
 
     # Gráfico Total de Casos
-    st.subheader(f'Total de casos por bairro.')
-    total_cases_bairro = filepath['sex_desc'].value_counts()
-    st.bar_chart(total_cases_bairro)
+    st.subheader('Porcentagem de subnutrição por região')
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(pol_par)
+    with col2:
+        fig = px.bar(x=pol_par['latest_value'],
+                     y=pol_par['parentName'],
+                     orientation='h',
+                     labels={'x': 'Prevalência de subnutrição por região (%)','y': 'Região geográfica' },
+                     width=600, height=950)
+        st.plotly_chart(fig)
 
-    st.subheader(f'Taxa de analfabetismo por  Região')
-    crop = filepath['sex_desc']
-    fig = px.pie(filepath, values="latest_value", names="sex_desc", **COMMON_ARGS)
-    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-    chart(fig)
+    st.subheader('Porcentagem de subnutrição por país')
+    fig = px.bar(x=pol_par1['geoAreaName'],
+                 y=pol_par1['latest_value'],
+                 orientation='v',
+                 labels={'x': 'Região geográfica', 'y': 'Prevalência de subnutrição por país (%)'},
+                 width=1100, height=600)
+    st.plotly_chart(fig)
 
-    st.subheader("Value of each Symbol per Account")
-    fig = px.sunburst(
-        filepath, path=["age_desc", "sex_desc"], values="latest_value", **COMMON_ARGS
-    )
-    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-    chart(fig)
+    st.subheader('Prevalência de subnutrição por sexo e idade')
+    col1, col2 = st.columns(2)
+    with col1:
+        crop = filepath['sex_desc']
+        fig = px.pie(filepath, values="latest_value", names="sex_desc", **COMMON_ARGS)
+        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        chart(fig)
+    with col2:
+        fig = px.sunburst(
+            filepath, path=["age_desc", "sex_desc"], values="latest_value", **COMMON_ARGS)
+        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        chart(fig)
 
     st.subheader('Fonte dos dados:')
     st.info("""
