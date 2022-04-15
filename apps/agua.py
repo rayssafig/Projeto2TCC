@@ -3,16 +3,19 @@ import geopandas as gpd
 from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 
 def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-06.png')
     titl.title('ODS 6: Água potável e saneamento')
-    st.subheader('Garantir a disponibilidade e a gestão sustentável da água potável e do saneamento para todos')
+    st.subheader('Objetivo: Garantir a disponibilidade e a gestão sustentável da água potável e do saneamento para todos')
+    st.write('Segundo o PNUD Brasil, Estima-se que desde 1980, mais de 2,1 bilhões de pessoas passaram a ter acesso a água potável e de qualidade. Entretanto, com o passar dos anos e os efeitos causados pelas mudanças climáticas e aumento da temperatura global do planeta, a preocupação com a iminente diminuição desse número atrai a atenção dos governos.'
+             ' Principalmente, devido ao fato de que mais de 40% da população global sofre com a escassez de água.')
+    st.write('Buscar saber onde estão e quais são os mananciais de água disponíveis, auxilia na preservação dos recursos naturais e promove o incentivo à políticas públicas que venham a investir em infraestrutura adequada e acesso ao saneamento, preservando o uso consciente desse insumo.')
 
-    with st.expander('Indicadores do Objetivo 6'):
+    with st.expander('Saber mais sobre os Indicadores do Objetivo 6'):
         st.write("""**6.1** Até 2030, alcançar o acesso universal e equitativo a água potável e segura para todos
         \n **6.2** Até 2030, alcançar o acesso a saneamento e higiene adequados e equitativos para todos, e acabar com a defecação a céu aberto, com especial atenção para as necessidades das mulheres e meninas e daqueles em situação de vulnerabilidade
         \n **6.3** Até 2030, melhorar a qualidade da água, reduzindo a poluição, eliminando despejo e minimizando a liberação de produtos químicos e materiais perigosos, reduzindo à metade a proporção de águas residuais não tratadas e aumentando substancialmente a reciclagem e reutilização segura globalmente
@@ -26,23 +29,9 @@ def app():
     st.write('A fim de atingir o Indicador 6.6, pode-se observar o reservatório de água, ao longo do tempo, e como foi afetado pela forte estiagem nos últimos três anos. Mapear a represa do Iraí, que abastece Curitiba e região metropolitana, é uma das formas de proteger esse ecossistema. ')
     st.image('https://media.giphy.com/media/CgzeCSpg4X0QEQxus6/giphy.gif')
 
-    # Dados oriundos do GEO INFO - EMBRAPA - Rede de drenagem região semiárida de Alagoas
-    st.subheader('Rede de drenagem na região semiárida de Alagoas')
-    drenagem = gpd.read_file('http://geoinfo.cnps.embrapa.br/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode%3Ahidrografia&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature')
-    m = folium.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9, control_scale=True)
-    folium.Choropleth(
-        drenagem[drenagem.geometry.length > 0.001],
-        line_weight=1,
-        line_color='blue'
-    ).add_to(m)
-    folium.LayerControl().add_to(m)
-    folium_static(m)
 
     st.subheader('Disponibilidade Hídrica Superficial do Brasil')
-    st.write('No cálculo da estimativa da disponibilidade hídrica de águas superficiais no Brasil, foi adotada a vazão de restrição dos reservatórios, '
-             'acrescida do incremental da vazão de estiagem (vazão com permanência de 95%) para os trechos regularizados (quando não se dispunha da informação '
-             'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
-             'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%.')
+    st.write('A fim de reconhecer a superfície com água potável disponível, que deve ser preservada, pode-se visualizar no mapa a seguir, a disponibilidade hídrica superficial do país, que apresenta todas as redes de drenagem ao longo da extensão desse país continente.')
 
     url = 'http://www.labgeolivre.ufpr.br/arquivos/SNIRH_DispHidricaSuperficial.zip'
     filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
@@ -59,17 +48,47 @@ def app():
     ).add_to(m)
     folium.LayerControl().add_to(m)
     folium_static(m)
-    st.write(disp_agua.head())
+    st.write('No cálculo da estimativa da disponibilidade hídrica de águas superficiais no Brasil, foi adotada a vazão de restrição dos reservatórios, '
+             'acrescida do incremental da vazão de estiagem (vazão com permanência de 95%) para os trechos regularizados (quando não se dispunha da informação '
+             'de vazão de restrição utilizou-se a vazão regularizada pelo sistema de reservatórios com 100% de garantia). Em rios sem regularização, '
+             'a disponibilidade foi considerada como apenas a vazão (de estiagem) com permanência de 95%. (ANA, 2022)')
 
-    # Gráficos
-    #st.line_chart(disp_agua['dispq95'])
-    st.subheader('Total de casos por bairro.')
-    #total_cases_bairro = disp_agua['dispq95'].value_counts()
-    #st.bar_chart(total_cases_bairro)
-    plt.plot(disp_agua['nmrio'], disp_agua['id'])
-    plt.show()
+    st.subheader('Vazão de permanência 95% por rio ao longo da bacia hidrográfica')
+    clist = disp_agua['nmrio'].unique()
+    rio = st.selectbox("Selecione um rio:", clist)
+    fig = px.line(disp_agua[disp_agua['nmrio'] == rio],
+                  x="cobacia", y="dispq95", title=f'Você está visualizando a Q95 do rio selecionado: {rio}',
+                  labels={'x': 'Bacia Hidrográfica','y': 'Q95 (m³/s)'})
+    st.plotly_chart(fig)
+
+    st.subheader('Disponibilidade Hídrica Superficial da Bacia Hidrográfica Parnaíba')
+    st.write('Explorando outro nível de recorte geográfico, o mapa a seguir representa a drenagem superficial disponível para a Bacia Hidrográfica da Parnaíba, no estado do Piauí.')
+    url1 = 'http://www.labgeolivre.ufpr.br/arquivos/Bacia_recorte.zip'
+    filename1 = 'Bacia_recorte.shp'
+    r = requests.get(url1)
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    z.extractall()
+    bacia = gpd.read_file(filename1, sep=',')
+
+    m = folium.Map(location=[-7.3, -42.6], zoom_start=6.2)
+    folium.Choropleth(
+        bacia[bacia.geometry.length > 0.001],
+        line_weight=1,
+        line_color='blue'
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
+    folium_static(m)
+
+    group = bacia.groupby("nmrio")[['dispq95']].sum().reset_index()
+    st.subheader('Vazão com permanência de 95% dos rios da Bacia Parnaíba')
+    fig = px.line(group['dispq95'],
+                  x=group['nmrio'], y=group['dispq95'],
+                  labels={'x': 'Nome do rio','y': 'Q95 (m³/s)'},
+                  width=900, height=600)
+    st.plotly_chart(fig)
 
     st.subheader('Fonte dos dados:')
     st.info("""
-            \n 🔍 GEO INFO - EMBRAPA
-            \n 🔍 Catálogo de Metadados da ANA""")
+            \n 🔍 GEO INFO - EMBRAPA - [Portal de geoserviços](http://geoinfo.cnps.embrapa.br/)
+            \n 🔍 Catálogo de Metadados da ANA - [Portal de geoserviços](https://metadados.snirh.gov.br/geonetwork/srv/por/catalog.search#/home)
+            \n 🔍 Programa das Nações Unidas para o Desenvolvimento - [PNUD Brasil](https://www.br.undp.org/) """)

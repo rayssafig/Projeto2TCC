@@ -1,30 +1,19 @@
-import pandas as pd
 import streamlit as st
-import geopandas as gpd
 import requests
 import xmltodict
-import urllib
-import json
-
-import matplotlib.pyplot as plt
-import codecs
 
 
 def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-05.png')
     titl.title('ODS 5: Igualdade de Gênero')
-    st.subheader('Alcançar a igualdade de gênero e empoderar todas as mulheres e meninas')
+    st.subheader('Objetivo: Alcançar a igualdade de gênero e empoderar todas as mulheres e meninas')
     st.write('Os dados utilizados para mapear esse ODS são proveninentes de um Atlas geográfico para o estado do Paraná, desenvolvido pela Engenheira Cartógrafa e Agrimensora [Janiny Zanda](http://lattes.cnpq.br/2154838790427332), que foi desenvolvido como '    
-            '***"resultado de um Projeto de Conclusão de Curso de Engenharia Cartográfica e de Agrimensura da Universidade Federal do Paraná.'
-            ' O Objetivo do projeto é apresentar a utilização da cartografia para monitoramento dos indicadores referentes ao Objetivo de Desenvolvimento Sustentável da ONU número 5 : Igualdade de Gênero.***"')
+            '*"resultado de um Projeto de Conclusão de Curso de Engenharia Cartográfica e de Agrimensura da Universidade Federal do Paraná.'
+            ' O Objetivo do projeto é apresentar a utilização da cartografia para monitoramento dos indicadores referentes ao Objetivo de Desenvolvimento Sustentável da ONU número 5 : Igualdade de Gênero.*"')
     st.info('Você pode acessar o Atlas ODS 5 sobre Igualdade de Gênero através do link:'
              '\n [Atlas ODS 5](http://www.labgeolivre.ufpr.br/AtlasODSGenero/index.html)')
 
-    page = urllib.request.urlopen("http://www.labgeolivre.ufpr.br/AtlasODSGenero/index.html").read()
-    #st.write(page)
-    page = urllib.request.urlopen("http://www.labgeolivre.ufpr.br/AtlasODSGenero/Meta51/Meta51.html").read()
-    #st.write(page)
     url = "http://www.labgeolivre.ufpr.br/AtlasODSGenero/sites.xml"
     response = requests.get(url)
     data = xmltodict.parse(response.content)

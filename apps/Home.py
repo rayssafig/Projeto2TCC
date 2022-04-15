@@ -1,7 +1,4 @@
 import streamlit as st
-from random import randint
-from streamlit_observable import observable
-import leafmap.foliumap as leafmap
 
 
 def app():
@@ -12,8 +9,8 @@ def app():
     st.write('Seja bem-vindo a essa aplicação _open-source_, reprodutível, para visualizar dados e mapas relacionados aos Objetivos de Desenvolvimento Sustentável (ODS) e seus indicadores.')
 
     st.markdown("""
-        A aplicação é resultado de um Trabalho de Conclusão de Curso de Engenharia Cartográfica e de Agrimensura da Universidade Federal do Paraná, e tem o objetivo de apresentar diferentes utilizações da cartografia para representar os ODS e seus indicadores, através de mapas interativos, gráficos e demais dados oriundos de fontes livres
-        e bibliotecas geoespaciais como [folium](https://python-visualization.github.io/folium/modules.html), [geopandas](https://geopandas.org/), [leafmap](https://leafmap.org), [geemap](https://geemap.org), [pydeck](https://deckgl.readthedocs.io), e [kepler.gl](https://docs.kepler.gl/docs/keplergl-jupyter).""")
+        A aplicação é resultado de um Trabalho de Conclusão de Curso de Engenharia Cartográfica e de Agrimensura da Universidade Federal do Paraná, e tem o objetivo de apresentar diferentes utilizações da cartografia para representar os ODS e seus indicadores, através de mapas interativos, gráficos e tabelas oriundos de fontes livres
+        e bibliotecas geoespaciais como [folium](https://python-visualization.github.io/folium/modules.html), [geopandas](https://geopandas.org/), [leafmap](https://leafmap.org), [matplotlib](https://matplotlib.org/), [requests](https://docs.python-requests.org/), e [pandas](https://pandas.pydata.org/).""")
 
     st.info("🚨 **Selecione no menu à esquerda para navegar entre as diferentes aplicações** 🚨 ")
 
@@ -90,20 +87,12 @@ def app():
     titl.write('**Parceria e meios de implementação**')
     imga.image('E-WEB-Goal-17.png')
 
-    st.write('O objetivo principal dessa aplicação é apresentar dados que representem os ODS e seus indicadores.')
+    st.write('O objetivo principal dessa aplicação é apresentar dados espaciais e análises que representem os ODS e seus indicadores e possam servir de modelo e inspiração para criação de ***dashboards*** que auxiliem na tomada de decisões.')
              
     st.write('Com foco em promover análises geoespaciais, dados espaciais de livre acesso serão utilizados para permitir ao usuário visualizar diferentes recortes geográficos,'
              ' a nível municipal, estadual, nacional e até global.')
 
     st.info('🧭 Aproveite a experiência e navegue pelas diferentes páginas para visualizar os ODS. 🔍')
-
-    #observers = observable("Tour pelo mundo!",
-                           #notebook="@d3/world-tour",
-                           #targets=["canvas"],
-                           #observe=["name"]
-                          #)
-    #name = observers.get("name")
-    #st.write(f"Você está vendo o país: *{name}*")
 
     st.markdown("## Obrigada por utilizar essa aplicação!")
     st.info('Essa aplicação usa a biblioteca **Streamlit**. O código fonte encontra-se disponível no [GitHub](https://github.com/rayssafig/Projeto2TCC) 👾')

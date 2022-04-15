@@ -20,8 +20,10 @@ def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-02.png')
     titl.title('ODS 2: Fome zero e agricultura sustentável')
-    st.subheader('Erradicar a fome, alcançar a segurança alimentar, '
-                 'melhorar a nutrição e promover a agricultura sustentável')
+    st.subheader('Objetivo: Erradicar a fome, alcançar a segurança alimentar, melhorar a nutrição e promover a agricultura sustentável')
+    st.write('*O rápido crescimento econômico e o aumento da produção agrícola nas últimas duas décadas fizeram com que o número de pessoas em má-nutrição caísse quase pela metade. Muitos países em desenvolvimento que sofriam com a fome agora podem suprir as necessidades dos mais vulneráveis. Ásia central, Sudeste Asiático, América Latina e o Caribe são regiões que fizeram grandes progressos para erradicar  a fome extrema.* (PNUD, 2022)')
+    st.write('A meta de acabar com todas as formas de fome e a má-nutrição até 2030, envolve compreender o atual cenário da fome no mundo. Cada país enfrenta uma realidade diferente e suas metas devem ser planejadas de acordo com sua situação.'
+             'A seguir, resultados de análises detalhadas sobre a situação da fome no globo')
 
     with st.expander('Saber mais sobre os Indicadores do Objetivo 2'):
         st.write("""**2.1** Até 2030, acabar com a fome e garantir o acesso de todas as pessoas, em particular os pobres e pessoas em situações vulneráveis, incluindo crianças, a alimentos seguros, nutritivos e suficientes durante todo o ano 
@@ -71,12 +73,18 @@ def app():
                      width=600, height=950)
         st.plotly_chart(fig)
 
+    crop = pol_par['parentName']
+    fig = px.pie(pol_par, values="latest_value", names="parentName", **COMMON_ARGS)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
+
+
     st.subheader('Porcentagem de subnutrição por país')
     fig = px.bar(x=pol_par1['geoAreaName'],
                  y=pol_par1['latest_value'],
                  orientation='v',
                  labels={'x': 'Região geográfica', 'y': 'Prevalência de subnutrição por país (%)'},
-                 width=1100, height=600)
+                 width=1300, height=600)
     st.plotly_chart(fig)
 
     st.subheader('Prevalência de subnutrição por sexo e idade')

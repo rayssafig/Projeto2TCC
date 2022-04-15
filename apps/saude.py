@@ -11,7 +11,7 @@ def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-03.png')
     titl.title('ODS 3: Saúde e Bem-Estar')
-    st.subheader('Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
+    st.subheader('Objetivo: Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
     st.write('Cada ODS apresenta uma série de indicadores, que representam objetivos menores que auxiliam a atingir o objetivo principal. '
              'Você pode visualizar todos os indicadores e metas desenvolviddos para esse ODS, expandindo a seção a seguir')
 
@@ -48,7 +48,7 @@ def app():
     z.extractall()
     df_bairros = gpd.read_file(filename, sep=',')
 
-    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-06_Casos_Covid_19_-_Base_de_Dados.csv'
+    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-13_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
     join = pd.merge(df_bairros, df_casos, left_on="NOME", right_on="BAIRRO")
@@ -62,7 +62,7 @@ def app():
         data=casos_por_bairro,
         columns=['BAIRRO', 'CLASSIFICAÇÃO FINAL'],
         key_on='feature.properties.NOME',
-        fill_color='BuPu',
+        fill_color='Blues',
         legend_name='Casos por bairro',
         bins=bins,
         labels={'BAIRRO'},
@@ -112,7 +112,7 @@ def app():
     st.markdown(
         """**OBS:** Você pode passar o mouse sobre a barra para ver a quantidade exata de casos e usar o mouse para aumentar ou diminuir o tamanho do gráfico.""")
 
-    st.subheader('Fonte dos dados')
+    st.subheader('Fonte dos dados:')
     st.info("""
         \n 🔍 Os dados de **COVID-19** estão disponíveis no [Portal de dados abertos](https://www.curitiba.pr.gov.br/dadosabertos/) da Prefeitura Municipal de Curitiba.
         \n 🔍 Os **dados espaciais** do município são disponibilizados pelo [IPPUC](https://ippuc.org.br/geodownloads) - Instituto de Pesquisa e Planejamento Urbano de Curitiba.""")

@@ -12,7 +12,7 @@ def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-01.png')
     titl.title('ODS 1: Erradicação da pobreza')
-    st.subheader('Objetivo 1: Erradicar a pobreza em todas as formas e em todos os lugares')
+    st.subheader('Objetivo: Erradicar a pobreza em todas as formas e em todos os lugares')
     st.write('Cada ODS apresenta uma série de indicadores, que representam objetivos menores que auxiliam a atingir o objetivo principal. '
              'Você pode visualizar todos os indicadores criados para esse ODS, expandindo a seção a seguir.')
 
@@ -57,10 +57,12 @@ def app():
     st.write('**OBS:** Os valores são referentes ao último ano de dados disponíveis.')
 
     st.write('**Mapeando o PIB per capita interno dos países**')
+    st.write(
+        'Para atingir o segundo indicador, o 1.2, é importante conhecer as diferentes realidades de cada país, e suas definições internas. Dessa forma, é possível mapear o resultado do PIB nacional e visualizar a sua evolução '
+        'ao longo do tempo, para entender e quantificar os resultados.')
+
     with st.expander('Indicador 1.2'):
         st.write('**1.2** Até 2030, reduzir pelo menos à metade a proporção de homens, mulheres e crianças, de todas as idades, que vivem na pobreza, em todas as suas dimensões, de acordo com as definições nacionais')
-    st.write('Para atingir o Indicador 1.2, é importante conhecer as diferentes realidades de cada país, e suas definições internas. Dessa forma, é possível mapear o resultado do PIB nacional e visualizar a sua evolução '
-             'ao longo do tempo, para entender e quantificar os resultados.')
     st.write('**Resultado do PIB per capita dos países, ao longo dos anos:** Mapear situação de renda da população global')
 
     # Bases de dados da biblioteca Ploty (Gapminder)
@@ -72,8 +74,6 @@ def app():
     fig = px.line(df[df['country'] == country],
                   x="year", y="gdpPercap", title=f'Você está visualizando o PIB do país selecionado: {country}')
     st.plotly_chart(fig)
-    st.write(df)
-    #st.write(clist)
 
     url = 'http://www.labgeolivre.ufpr.br/arquivos/ne_110m_admin_0_countries.zip'
     filename = 'ne_110m_admin_0_countries.shp'
@@ -81,21 +81,26 @@ def app():
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     mapa = gpd.read_file(filename, sep=',')
-    #st.write(casos)
+    st.write(mapa.head())
+
     group = df.groupby('country')[['iso_alpha']].count()
     st.write(group)
     Join = pd.merge(mapa, df, left_on="ISO_A3_EH", right_on="iso_alpha")
-    casos = Join.groupby("gdpPercap")[['country']].count().reset_index()
-    #st.write(Join.head(-2))
-    st.write(mapa.head(2))
+    #Join1 = pd.concat([mapa, df.groupby('country')[['iso_alpha']].count()],keys=["ISO_A3_EH", "iso_alpha"])
+    #st.write(Join1.head())
+    st.write(df)
+    group1 = df.groupby('country')
+    st.write(group1)
+    casos = df.groupby("gdpPercap")[['country']].count().reset_index()
+    st.write(Join.head())
 
     st.subheader('**Veja o PIB per capita por país no mapa:**')
     m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
-    bins = list(mapa['POP_EST'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
+    bins = list(mapa['POP_EST'].quantile([0, 0.75, 0.9, 0.98, 1]))
     folium.Choropleth(
-        geo_data=Join,
+        geo_data=mapa,
         name='Países',
-        #data=df,
+        #data=group1,
         #columns=['country', 'gdpPercap'], #coluna
         key_on='feature.properties.POP_EST',
         fill_color='Reds',
@@ -126,13 +131,8 @@ def app():
     folium.LayerControl().add_to(m)
     folium_static(m)
 
-
     st.subheader('Fonte dos dados:')
     st.info("""
             \n 🔍 Conjunto de dados espaciais de domínio público [Natural Earth](https://www.naturalearthdata.com/downloads/)
             \n 🔍 Divisão de Estatística das Nações Unidas [UN DESA Statistics Division](https://unstats.un.org/sdgs/dataportal)
             \n 🔍 Dados da biblioteca Ploty [Gapminder](https://www.gapminder.org/)""")
-    # Gráfico Total de Casos
-    #geobr.list_geobr()
-    #df = geobr.read_state(code_state="DF", year=2020)
-    #df.plot()

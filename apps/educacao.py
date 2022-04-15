@@ -21,7 +21,7 @@ def app():
     titl, imga = st.columns((4, 0.8))
     imga.image('E-WEB-Goal-04.png')
     titl.title('ODS 4: Educação de qualidade')
-    st.subheader('Garantir o acesso à educação inclusiva, de qualidade e equitativa, e promover oportunidades de aprendizagem ao longo da vida para todos')
+    st.subheader('Objetivo: Garantir o acesso à educação inclusiva, de qualidade e equitativa, e promover oportunidades de aprendizagem ao longo da vida para todos')
     st.write('A fim de alcançar uma educação de qualidade para uma nação, é importante e necessário conhecer a realidade daquele local, levantar dados, desde os mais '
              'básicos, para poder entender a situação e aplicar políticas eficientes que tragam resultados. '
              'Você pode visualizar todos os indicadores e metas desenvolviddos para esse ODS, expandindo a seção a seguir')
@@ -103,7 +103,7 @@ def app():
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     chart(fig)
 
-    st.subheader('Fonte dos dados')
+    st.subheader('Fonte dos dados:')
     st.info("""
         \n 🔍 [IPEA - Instituto de Pesquisa Econômica Aplicada](http://www.ipeadata.gov.br/Default.aspx).
         \n 🔍 [IBGE - Instituto Brasileiro de Geografia e Estatística](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html?=&t=acesso-ao-produto).""")
