@@ -65,7 +65,7 @@ def app():
         st.write('**1.2** Até 2030, reduzir pelo menos à metade a proporção de homens, mulheres e crianças, de todas as idades, que vivem na pobreza, em todas as suas dimensões, de acordo com as definições nacionais')
     st.write('**Resultado do PIB per capita dos países, ao longo dos anos:** Mapear situação de renda da população global')
 
-    # Bases de dados da biblioteca Ploty (Gapminder)
+    # Bases de dados Gapminder da biblioteca Ploty
     df = pd.DataFrame(px.data.gapminder())
     df.head(5)
     a = df.iloc[:, :]
@@ -81,33 +81,26 @@ def app():
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     mapa = gpd.read_file(filename, sep=',')
-    st.write(mapa.head())
 
-    group = df.groupby('country')[['iso_alpha']].count()
-    st.write(group)
-    Join = pd.merge(mapa, df, left_on="ISO_A3_EH", right_on="iso_alpha")
-    #Join1 = pd.concat([mapa, df.groupby('country')[['iso_alpha']].count()],keys=["ISO_A3_EH", "iso_alpha"])
-    #st.write(Join1.head())
-    st.write(df)
-    group1 = df.groupby('country')
-    st.write(group1)
-    casos = df.groupby("gdpPercap")[['country']].count().reset_index()
-    st.write(Join.head())
+    df_mask = df['year'] == 2007
+    filtered_df = df[df_mask]
+
+    Join = pd.merge(mapa, filtered_df, left_on="ISO_A3_EH", right_on="iso_alpha")
 
     st.subheader('**Veja o PIB per capita por país no mapa:**')
-    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
-    bins = list(mapa['POP_EST'].quantile([0, 0.75, 0.9, 0.98, 1]))
+    m = folium.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
+    bins = list(filtered_df['gdpPercap'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
-        geo_data=mapa,
+        geo_data=Join,
         name='Países',
-        #data=group1,
-        #columns=['country', 'gdpPercap'], #coluna
-        key_on='feature.properties.POP_EST',
+        data=filtered_df,
+        columns=['country', 'gdpPercap'], #coluna
+        key_on='feature.properties.country',
         fill_color='Reds',
         legend_name='PIB per capita',
         bins=bins,
-        #labels={'NAME'}
     ).add_to(m)
+
     style_function = lambda x: {'fillColor': '#ffffff',
                                 'color': '#000000',
                                 'fillOpacity': 0,
@@ -123,13 +116,14 @@ def app():
         highlight_function=highlight_function,
         tooltip=folium.features.GeoJsonTooltip(
             fields=['NAME', 'gdpPercap'],
-            aliases=['Nome do país: ', 'PIB per capita:'],
+            aliases=['Nome do país: ', 'PIB per capita (US$):'],
             style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"))
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
+    st.write('**OBS:** Os dados de PIB per capita por país são referentes ao ano de 2007. Os países não representados no mapa indicam que não havia informação disponível sobre eles a respeito do PIB per capita daquele ano')
 
     st.subheader('Fonte dos dados:')
     st.info("""

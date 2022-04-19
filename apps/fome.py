@@ -11,8 +11,7 @@ COMMON_ARGS = {
     "color_discrete_sequence": px.colors.sequential.Cividis,
     "hover_data": [
         'latest_value',
-    ],
-}
+    ], }
 
 
 def app():
@@ -39,7 +38,7 @@ def app():
         'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SN_ITK_DEFC_2_1_1_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
 
     st.subheader('Prevalência de subnutrição por país')
-    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
+    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Water Color', zoom_start=1.5, control_scale=True)
     folium.GeoJson(
         hunger,
         name='Percentual',
@@ -47,7 +46,7 @@ def app():
         tooltip=folium.features.GeoJsonTooltip(
             fields=['geoAreaName', 'latest_value'],
             aliases=['País (Área geográfica): ', 'Prevalência de desnutrição (%): '],
-            style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"),
+            style="background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;",
             localize=True)
     ).add_to(m)
     folium.LayerControl().add_to(m)
@@ -56,49 +55,35 @@ def app():
     pol_par = hunger.groupby("parentName")[['latest_value']].sum().reset_index()
     pol_par1 = hunger.groupby("geoAreaName")[['latest_value']].sum().reset_index()
 
-
     filepath = gpd.read_file(
         "https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/AG_PRD_FIESSIN_2_1_2_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
 
-    # Gráfico Total de Casos
     st.subheader('Porcentagem de subnutrição por região')
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write(pol_par)
-    with col2:
-        fig = px.bar(x=pol_par['latest_value'],
-                     y=pol_par['parentName'],
-                     orientation='h',
-                     labels={'x': 'Prevalência de subnutrição por região (%)','y': 'Região geográfica' },
-                     width=600, height=950)
-        st.plotly_chart(fig)
+    fig = px.bar(x=pol_par['parentName'],
+                 y=pol_par['latest_value'],
+                 orientation='v',
+                 labels={'x': 'Região geográfica', 'y': 'Prevalência de subnutrição por país (%)'},
+                 width=900, height=600)
+    st.plotly_chart(fig)
 
     crop = pol_par['parentName']
     fig = px.pie(pol_par, values="latest_value", names="parentName", **COMMON_ARGS)
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     chart(fig)
 
+    df_mask = filepath['sex_desc'] != 'Both sexes'
+    filtered_df = filepath[df_mask]
 
-    st.subheader('Porcentagem de subnutrição por país')
-    fig = px.bar(x=pol_par1['geoAreaName'],
-                 y=pol_par1['latest_value'],
-                 orientation='v',
-                 labels={'x': 'Região geográfica', 'y': 'Prevalência de subnutrição por país (%)'},
-                 width=1300, height=600)
-    st.plotly_chart(fig)
+    df_mask1 = filepath['age_desc'] == '15 years old and over'
+    filtered_df1 = filepath[df_mask1]
 
-    st.subheader('Prevalência de subnutrição por sexo e idade')
-    col1, col2 = st.columns(2)
-    with col1:
-        crop = filepath['sex_desc']
-        fig = px.pie(filepath, values="latest_value", names="sex_desc", **COMMON_ARGS)
-        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-        chart(fig)
-    with col2:
-        fig = px.sunburst(
-            filepath, path=["age_desc", "sex_desc"], values="latest_value", **COMMON_ARGS)
-        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-        chart(fig)
+    st.subheader('Prevalência de subnutrição por sexo')
+    st.write('Analisando a proporção de pessoas que se encontram em situação de subnutrição, percebe-se que o número de mulheres nessas condições é maior do que de homens, em um panorama geral dos países')
+    crop = filtered_df['sex_desc']
+    fig = px.pie(filtered_df, values="latest_value", names="sex_desc", **COMMON_ARGS)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
+    st.write('**OBS:** Os valores de referência são para pessoas com 15 anos completos ou mais')
 
     st.subheader('Fonte dos dados:')
     st.info("""

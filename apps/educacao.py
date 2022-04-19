@@ -59,7 +59,7 @@ def app():
     st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE no último censo realizado no país.')
     st.subheader('Taxa de analfabetismo por estado brasileiro')
 
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4)
+    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
     bins = list(df_casos['2,014.00'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
         geo_data=df_BR,
@@ -70,7 +70,6 @@ def app():
         fill_color='PRGn',
         legend_name='Analfabetos (%) pessoas com 15 anos ou mais',
         bins=bins,
-        # labels={'BAIRRO'},
     ).add_to(m)
     style_function = lambda x: {'fillColor': '#ffffff',
                                 'color': '#000000',

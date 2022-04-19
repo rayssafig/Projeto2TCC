@@ -29,7 +29,6 @@ def app():
     st.write('A fim de atingir o Indicador 6.6, pode-se observar o reservatório de água, ao longo do tempo, e como foi afetado pela forte estiagem nos últimos três anos. Mapear a represa do Iraí, que abastece Curitiba e região metropolitana, é uma das formas de proteger esse ecossistema. ')
     st.image('https://media.giphy.com/media/CgzeCSpg4X0QEQxus6/giphy.gif')
 
-
     st.subheader('Disponibilidade Hídrica Superficial do Brasil')
     st.write('A fim de reconhecer a superfície com água potável disponível, que deve ser preservada, pode-se visualizar no mapa a seguir, a disponibilidade hídrica superficial do país, que apresenta todas as redes de drenagem ao longo da extensão desse país continente.')
 
@@ -40,7 +39,7 @@ def app():
     z.extractall()
     disp_agua = gpd.read_file(filename, sep=',')
 
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4)
+    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
     folium.Choropleth(
         disp_agua[disp_agua.geometry.length > 0.001],
         line_weight=1,
@@ -70,7 +69,7 @@ def app():
     z.extractall()
     bacia = gpd.read_file(filename1, sep=',')
 
-    m = folium.Map(location=[-7.3, -42.6], zoom_start=6.2)
+    m = folium.Map(location=[-7.3, -42.6], zoom_start=6.2, control_scale=True)
     folium.Choropleth(
         bacia[bacia.geometry.length > 0.001],
         line_weight=1,
