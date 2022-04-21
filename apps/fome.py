@@ -22,7 +22,7 @@ def app():
     st.subheader('Objetivo: Erradicar a fome, alcançar a segurança alimentar, melhorar a nutrição e promover a agricultura sustentável')
     st.write('*O rápido crescimento econômico e o aumento da produção agrícola nas últimas duas décadas fizeram com que o número de pessoas em má-nutrição caísse quase pela metade. Muitos países em desenvolvimento que sofriam com a fome agora podem suprir as necessidades dos mais vulneráveis. Ásia central, Sudeste Asiático, América Latina e o Caribe são regiões que fizeram grandes progressos para erradicar  a fome extrema.* (PNUD, 2022)')
     st.write('A meta de acabar com todas as formas de fome e a má-nutrição até 2030, envolve compreender o atual cenário da fome no mundo. Cada país enfrenta uma realidade diferente e suas metas devem ser planejadas de acordo com sua situação.'
-             'A seguir, resultados de análises detalhadas sobre a situação da fome no globo')
+             ' A seguir, resultados de análises detalhadas sobre a situação da fome no globo.')
 
     with st.expander('Saber mais sobre os Indicadores do Objetivo 2'):
         st.write("""**2.1** Até 2030, acabar com a fome e garantir o acesso de todas as pessoas, em particular os pobres e pessoas em situações vulneráveis, incluindo crianças, a alimentos seguros, nutritivos e suficientes durante todo o ano 
@@ -78,12 +78,12 @@ def app():
     filtered_df1 = filepath[df_mask1]
 
     st.subheader('Prevalência de subnutrição por sexo')
-    st.write('Analisando a proporção de pessoas que se encontram em situação de subnutrição, percebe-se que o número de mulheres nessas condições é maior do que de homens, em um panorama geral dos países')
+    st.write('Analisando a proporção de pessoas que se encontram em situação de subnutrição, percebe-se que o número de mulheres nessas condições é maior do que de homens, em um panorama geral dos países.')
     crop = filtered_df['sex_desc']
     fig = px.pie(filtered_df, values="latest_value", names="sex_desc", **COMMON_ARGS)
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
     chart(fig)
-    st.write('**OBS:** Os valores de referência são para pessoas com 15 anos completos ou mais')
+    st.write('**OBS:** Os valores de referência são para pessoas com 15 anos completos ou mais.')
 
     st.subheader('Fonte dos dados:')
     st.info("""

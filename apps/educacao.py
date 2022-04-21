@@ -13,8 +13,7 @@ COMMON_ARGS = {
     "color_discrete_sequence": px.colors.sequential.Viridis,
     "hover_data": [
         '2,014.00',
-    ],
-}
+    ], }
 
 
 def app():
@@ -24,7 +23,7 @@ def app():
     st.subheader('Objetivo: Garantir o acesso à educação inclusiva, de qualidade e equitativa, e promover oportunidades de aprendizagem ao longo da vida para todos')
     st.write('A fim de alcançar uma educação de qualidade para uma nação, é importante e necessário conhecer a realidade daquele local, levantar dados, desde os mais '
              'básicos, para poder entender a situação e aplicar políticas eficientes que tragam resultados. '
-             'Você pode visualizar todos os indicadores e metas desenvolviddos para esse ODS, expandindo a seção a seguir')
+             'Você pode visualizar todos os indicadores e metas desenvolvidos para esse ODS, expandindo a seção a seguir.')
 
     with st.expander('Saber mais sobre os Indicadores do Objetivo 4'):
         st.write('**4.1** Até 2030, garantir que todas as meninas e meninos completem o ensino primário e secundário livre, equitativo e de qualidade, que conduza a resultados de aprendizagem relevantes e eficazes')
@@ -47,16 +46,14 @@ def app():
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
     df_BR = gpd.read_file(filename, sep=',')
-    #st.write(df_BR.head())
 
     # Fonte: IPEA DATA - Instituto de Pesquisa Econômica Aplicada
     tabela = 'http://www.labgeolivre.ufpr.br/arquivos/ipeadata_04-04-2022-09-10_.csv'
     df_casos = pd.read_csv(tabela, encoding='utf-8', delimiter=',')
-    #st.write(casos)
-    #st.write(df_casos.head())
+
     Join = pd.merge(df_BR, df_casos, left_on="SIGLA", right_on="Sigla")
 
-    st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE no último censo realizado no país.')
+    st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE.')
     st.subheader('Taxa de analfabetismo por estado brasileiro')
 
     m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
@@ -93,10 +90,9 @@ def app():
     m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
-    st.write('**OBS:** As informações sobre as taxas de analfabetismo por Unidade de Federação foram obtidas no último censo realizado no país, em 2010.')
+    st.write('**OBS:** As informações sobre as taxas de analfabetismo por Unidade de Federação foram obtidas no levantamento de dados feito pelo IBGE em 2014.')
 
-    #Gráfico de pizza
-    #st.write(df_casos)
+    # Gráfico de pizza
     st.subheader(f'Taxa de analfabetismo por  Região')
     fig = px.pie(Join, values="2,014.00", names="NM_REGIAO", **COMMON_ARGS)
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
@@ -106,6 +102,3 @@ def app():
     st.info("""
         \n 🔍 [IPEA - Instituto de Pesquisa Econômica Aplicada](http://www.ipeadata.gov.br/Default.aspx).
         \n 🔍 [IBGE - Instituto Brasileiro de Geografia e Estatística](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html?=&t=acesso-ao-produto).""")
-
-
-

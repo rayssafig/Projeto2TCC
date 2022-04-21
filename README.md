@@ -9,8 +9,9 @@ Essa aplicação tem por objetivo apresentar aos usuários, meios diferentes de 
 Com o uso de API e dados geoespaciais, a aplicação é um modelo reprodutível disponibilizado para a sociedade, com o intuito de apresentar os ODS com diferentes recortes geográficos, diferentes fontes de origem pública e diferentes formas de representação. 
 
 ## 🎲 Fontes
-* Repositório dos ícones ODS: https://www.un.org/sustainabledevelopment/news/communications-material/
-* API _open-source_: UNStats, INDE, EMBRAPA, ...
+* Repositório dos ícones ODS: [Materiais de Comunicação da ONU ](https://www.un.org/sustainabledevelopment/news/communications-material/)
+* _Open Source_: [UN Stats](https://unstats.un.org/sdgs/dataportal/countryprofiles), [EMBRAPA - GEOINFO](http://geoinfo.cnps.embrapa.br/layers/geonode%3Ahidrografia), [IBGE](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais.html), [IPPUC](https://www.ippuc.org.br/), [GAPMINDER](https://www.gapminder.org/), [*Natural Earth*](https://www.naturalearthdata.com/downloads/), [IPEA](http://www.ipeadata.gov.br/Default.aspx), [ANA](https://www.gov.br/ana/pt-br)
+* Bibliotecas *python*: [folium](https://python-visualization.github.io/folium/modules.html), [geopandas](https://geopandas.org/), [leafmap](https://leafmap.org), [matplotlib](https://matplotlib.org/), [requests](https://docs.python-requests.org/), e [pandas](https://pandas.pydata.org/)
 
 ## 🔌 Tecnologias
 

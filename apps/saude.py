@@ -13,7 +13,7 @@ def app():
     titl.title('ODS 3: Saúde e Bem-Estar')
     st.subheader('Objetivo: Garantir o acesso à saúde de qualidade e promover o bem-estar para todos, em todas as idades')
     st.write('Cada ODS apresenta uma série de indicadores, que representam objetivos menores que auxiliam a atingir o objetivo principal. '
-             'Você pode visualizar todos os indicadores e metas desenvolviddos para esse ODS, expandindo a seção a seguir')
+             'Você pode visualizar todos os indicadores e metas desenvolvidos para esse ODS, expandindo a seção a seguir.')
 
     with st.expander('Saber mais sobre os Indicadores do Objetivo 3'):
         st.write('**3.1** Até 2030, reduzir a taxa de mortalidade materna global para menos de 70 mortes por 100.000 nascidos vivos')
@@ -48,7 +48,7 @@ def app():
     z.extractall()
     df_bairros = gpd.read_file(filename, sep=',')
 
-    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-13_Casos_Covid_19_-_Base_de_Dados.csv'
+    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-20_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
     join = pd.merge(df_bairros, df_casos, left_on="NOME", right_on="BAIRRO")

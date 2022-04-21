@@ -1,6 +1,4 @@
 import streamlit as st
-import requests
-import xmltodict
 
 
 def app():
@@ -13,10 +11,6 @@ def app():
             ' O Objetivo do projeto é apresentar a utilização da cartografia para monitoramento dos indicadores referentes ao Objetivo de Desenvolvimento Sustentável da ONU número 5 : Igualdade de Gênero.*"')
     st.info('Você pode acessar o Atlas ODS 5 sobre Igualdade de Gênero através do link:'
              '\n [Atlas ODS 5](http://www.labgeolivre.ufpr.br/AtlasODSGenero/index.html)')
-
-    url = "http://www.labgeolivre.ufpr.br/AtlasODSGenero/sites.xml"
-    response = requests.get(url)
-    data = xmltodict.parse(response.content)
 
     with st.expander('Saber mais sobre os Indicadores do Objetivo 5:'):
         st.write('**5.1** Acabar com todas as formas de discriminação contra todas as mulheres e meninas em toda parte')
