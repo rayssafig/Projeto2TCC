@@ -12,8 +12,7 @@ COMMON_ARGS = {
     "color": "Sigla",
     "color_discrete_sequence": px.colors.sequential.Viridis,
     "hover_data": [
-        '2,014.00',
-    ], }
+        '2,014.00', ], }
 
 
 def app():

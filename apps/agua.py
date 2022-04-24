@@ -29,8 +29,21 @@ def app():
     st.write('A fim de atingir o Indicador 6.6, pode-se observar o reservatório de água, ao longo do tempo, e como foi afetado pela forte estiagem nos últimos três anos. Mapear a represa do Iraí, que abastece Curitiba e região metropolitana, é uma das formas de proteger esse ecossistema. ')
     st.image('https://media.giphy.com/media/CgzeCSpg4X0QEQxus6/giphy.gif')
 
+    # Dados oriundos do GEO INFO - EMBRAPA - Rede de drenagem região semiárida de Alagoas
+    st.subheader('Rede de drenagem na região semiárida de Alagoas')
+    st.write('É importante mapear áreas semiáridas que sofrem com as constantes estiagens que afetam a população. Nesse caso, a região Oeste de Alagoas é um exemplo que teve sua rede de drenagem mapeada, e pode contribuir para o ODS 6, no reconhecimento da superfície com água potável disponível, que deve ser preservada. ')
+    drenagem = gpd.read_file('http://geoinfo.cnps.embrapa.br/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode%3Ahidrografia&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature')
+    m = folium.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9, control_scale=True)
+    folium.Choropleth(
+        drenagem[drenagem.geometry.length > 0.001],
+        line_weight=1,
+        line_color='blue'
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
+    folium_static(m)
+
     st.subheader('Disponibilidade Hídrica Superficial do Brasil')
-    st.write('A fim de reconhecer a superfície com água potável disponível, que deve ser preservada, pode-se visualizar no mapa a seguir, a disponibilidade hídrica superficial do país, que apresenta todas as redes de drenagem ao longo da extensão desse país continente.')
+    st.write('A fim de explorar outro recorte geográfico e reconhecer a superfície com água potável disponível, que deve ser preservada, pode-se visualizar no mapa a seguir, a disponibilidade hídrica superficial do país, que apresenta todas as redes de drenagem ao longo da extensão desse país continente.')
 
     url = 'http://www.labgeolivre.ufpr.br/arquivos/SNIRH_DispHidricaSuperficial.zip'
     filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
@@ -58,32 +71,6 @@ def app():
     fig = px.line(disp_agua[disp_agua['nmrio'] == rio],
                   x="cobacia", y="dispq95", title=f'Você está visualizando a Q95 do rio selecionado: {rio}',
                   labels={'x': 'Bacia Hidrográfica','y': 'Q95 (m³/s)'})
-    st.plotly_chart(fig)
-
-    st.subheader('Disponibilidade Hídrica Superficial da Bacia Hidrográfica Parnaíba')
-    st.write('Explorando outro nível de recorte geográfico, o mapa a seguir representa a drenagem superficial disponível para a Bacia Hidrográfica da Parnaíba, no estado do Piauí.')
-    url1 = 'http://www.labgeolivre.ufpr.br/arquivos/Bacia_recorte.zip'
-    filename1 = 'Bacia_recorte.shp'
-    r = requests.get(url1)
-    z = zipfile.ZipFile(io.BytesIO(r.content))
-    z.extractall()
-    bacia = gpd.read_file(filename1, sep=',')
-
-    m = folium.Map(location=[-7.3, -42.6], zoom_start=6.2, control_scale=True)
-    folium.Choropleth(
-        bacia[bacia.geometry.length > 0.001],
-        line_weight=1,
-        line_color='blue'
-    ).add_to(m)
-    folium.LayerControl().add_to(m)
-    folium_static(m)
-
-    group = bacia.groupby("nmrio")[['dispq95']].sum().reset_index()
-    st.subheader('Vazão com permanência de 95% dos rios da Bacia Parnaíba')
-    fig = px.line(group['dispq95'],
-                  x=group['nmrio'], y=group['dispq95'],
-                  labels={'x': 'Nome do rio','y': 'Q95 (m³/s)'},
-                  width=900, height=600)
     st.plotly_chart(fig)
 
     st.subheader('Fonte dos dados:')

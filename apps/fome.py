@@ -4,6 +4,8 @@ import folium
 import geopandas as gpd
 import plotly.express as px
 import functools
+import requests, zipfile, io
+import pandas as pd
 
 chart = functools.partial(st.plotly_chart, use_container_width=True)
 COMMON_ARGS = {
@@ -36,21 +38,57 @@ def app():
     
     hunger = gpd.read_file(
         'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SN_ITK_DEFC_2_1_1_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
+    #hunger1 = pd.DataFrame(hunger)
+    hunger1 = pd.DataFrame(hunger.drop(columns='geometry'))
+    #st.write(hunger.head(1))
+
+    url = 'http://www.labgeolivre.ufpr.br/arquivos/ne_110m_admin_0_countries.zip'
+    filename = 'ne_110m_admin_0_countries.shp'
+    r = requests.get(url)
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    z.extractall()
+    mapa = gpd.read_file(filename, sep=',')
+
+    Join = pd.merge(mapa, hunger1, left_on="SOV_A3", right_on="ISO3")
 
     st.subheader('Prevalência de subnutrição por país')
     m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Water Color', zoom_start=1.5, control_scale=True)
-    folium.GeoJson(
-        hunger,
-        name='Percentual',
-        popup="última proporção conhecida: ",
-        tooltip=folium.features.GeoJsonTooltip(
-            fields=['geoAreaName', 'latest_value'],
-            aliases=['País (Área geográfica): ', 'Prevalência de desnutrição (%): '],
-            style="background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;",
-            localize=True)
+    bins = list(hunger1['latest_value'].quantile([0, 0.25, 0.5, 0.75, 1]))
+    folium.Choropleth(
+        geo_data=Join,
+        name='Países',
+        data=hunger,
+        columns=['geoAreaName', 'latest_value'],  # coluna
+        key_on='feature.properties.geoAreaName',
+        fill_color='Oranges',
+        legend_name='Taxa de subnutrição por país',
+        bins=bins,
     ).add_to(m)
+
+    style_function = lambda x: {'fillColor': '#ffffff',
+                                'color': '#000000',
+                                'fillOpacity': 0,
+                                'weight': 0.1}
+    highlight_function = lambda x: {'fillColor': '#000000',
+                                    'color': '#000000',
+                                    'fillOpacity': 0,
+                                    'weight': 0.1}
+    NIL = folium.features.GeoJson(
+        Join,
+        style_function=style_function,
+        control=False,
+        highlight_function=highlight_function,
+        tooltip=folium.features.GeoJsonTooltip(
+            fields=['ADMIN', 'latest_value'],
+            aliases=['Nome do país: ', 'Taxa de subnutrição (%):'],
+            style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"))
+    )
+    m.add_child(NIL)
+    m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
+    st.write(
+        '**OBS:** Os países não representados no mapa indicam que não havia informação disponível sobre eles a respeito da taxa de prevalância de subnutrição.')
 
     pol_par = hunger.groupby("parentName")[['latest_value']].sum().reset_index()
     pol_par1 = hunger.groupby("geoAreaName")[['latest_value']].sum().reset_index()
