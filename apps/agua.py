@@ -44,8 +44,8 @@ def app():
 
     st.subheader('Disponibilidade Hídrica Superficial do Brasil')
     st.write('A fim de explorar outro recorte geográfico e reconhecer a superfície com água potável disponível, que deve ser preservada, pode-se visualizar no mapa a seguir, a disponibilidade hídrica superficial do país, que apresenta todas as redes de drenagem ao longo da extensão desse país continente.')
-
-    url = 'http://www.labgeolivre.ufpr.br/arquivos/SNIRH_DispHidricaSuperficial.zip'
+    url = 'https://metadados.snirh.gov.br/geonetwork/srv/api/records/0c75f8eb-f5c7-4643-9f91-5bf86a09fb63/attachments/SNIRH_DispHidricaSuperficial.zip'
+    #url = 'http://www.labgeolivre.ufpr.br/arquivos/SNIRH_DispHidricaSuperficial.zip'
     filename = 'plnvw_ft_disponibilidade_hidrica_trecho.shp'
     r = requests.get(url)
     z = zipfile.ZipFile(io.BytesIO(r.content))

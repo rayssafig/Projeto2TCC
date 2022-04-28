@@ -48,7 +48,7 @@ def app():
     z.extractall()
     df_bairros = gpd.read_file(filename, sep=',')
 
-    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-20_Casos_Covid_19_-_Base_de_Dados.csv'
+    casos = 'https://mid.curitiba.pr.gov.br/dadosabertos/CasosCovid19/2022-04-27_Casos_Covid_19_-_Base_de_Dados.csv'
     df_casos = pd.read_csv(casos, encoding='latin1', delimiter=';')
     casos_por_bairro = df_casos.groupby("BAIRRO")[['CLASSIFICAÇÃO FINAL']].count().reset_index()
     join = pd.merge(df_bairros, df_casos, left_on="NOME", right_on="BAIRRO")
