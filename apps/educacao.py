@@ -10,7 +10,7 @@ import functools
 chart = functools.partial(st.plotly_chart, use_container_width=True)
 COMMON_ARGS = {
     "color": "Sigla",
-    "color_discrete_sequence": px.colors.sequential.Viridis,
+    "color_discrete_sequence": px.colors.sequential.Cividis,
     "hover_data": [
         '2,014.00', ], }
 

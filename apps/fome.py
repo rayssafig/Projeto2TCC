@@ -52,7 +52,7 @@ def app():
     Join = pd.merge(mapa, hunger1, left_on="SOV_A3", right_on="ISO3")
 
     st.subheader('Prevalência de subnutrição por país')
-    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Water Color', zoom_start=1.5, control_scale=True)
+    m = folium.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
     bins = list(hunger1['latest_value'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
         geo_data=Join,
@@ -107,7 +107,7 @@ def app():
     crop = pol_par['parentName']
     fig = px.pie(pol_par, values="latest_value", names="parentName", **COMMON_ARGS)
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-    chart(fig)
+    #chart(fig)
 
     df_mask = filepath['sex_desc'] != 'Both sexes'
     filtered_df = filepath[df_mask]
