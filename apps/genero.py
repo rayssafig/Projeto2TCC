@@ -59,6 +59,13 @@ def app():
 
     st.subheader('Fonte dos dados:')
     st.info("""
-        \n 🔍 Atlas ODS 5 - Igualdade de Gênero: [Atlas ODS 5](http://www.labgeolivre.ufpr.br/AtlasODSGenero/index.html).""")
+        \n 🔍 Atlas ODS 5 - Igualdade de Gênero: [Atlas ODS 5](http://www.labgeolivre.ufpr.br/AtlasODSGenero/index.html)
+        \n 🔍 [IBGE](https://www.ibge.gov.br/geociencias/organizacao-do-territorio/15774-malhas.html?=&t=downloads)
+        \n 🔍 [Secretaria de Segurança Pública PR](http://www.seguranca.pr.gov.br/CAPE/Estatisticas)
+        \n 🔍 [MS/SVS/CGIA E - Sistema de Informações sobre Mortalidade - SIM](http://tabnet.datasus.gov.br/cgi/deftohtm.exe?sim/cnv/obt10pr.def)
+        \n 🔍 [TSE - Tribunal Superior Eleitoral](https://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais-1/repositorio-de-dados-eleitorais)
+        \n 🔍 [IPARDES - Instituto Paranaense de Desenvolvimento Econômico e Social](http://www.ipardes.gov.br/imp/index.php)
+        \n 🔍 [Polícia Civil do Paraná](https://www.policiacivil.pr.gov.br/webservices/policiacivil/listaTelefonica)
+        """)
 
 

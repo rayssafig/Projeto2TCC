@@ -123,7 +123,8 @@ def app():
     m.keep_in_front(NIL)
     folium.LayerControl().add_to(m)
     folium_static(m)
-    st.write('**OBS:** Os dados de PIB per capita por país são referentes ao ano de 2007. Os países não representados no mapa indicam que não havia informação disponível sobre eles a respeito do PIB per capita daquele ano')
+    st.write('**OBS:** Os dados de PIB per capita por país são referentes ao ano de 2007. Os países não representados no mapa indicam que não havia informação disponível sobre eles a respeito do PIB per capita daquele '
+             'O PIB per capita representa a razão entre o Produto Interno Bruto do país pelo número de habitantes do mesmo país.')
 
     st.subheader('Fonte dos dados:')
     st.info("""
