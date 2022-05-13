@@ -4,7 +4,7 @@ from streamlit_folium import folium_static
 import folium
 import requests, zipfile, io
 import plotly.express as px
-
+import leafmap.foliumap as leafmap
 
 def app():
     titl, imga = st.columns((4, 0.8))
@@ -33,12 +33,17 @@ def app():
     st.subheader('Rede de drenagem na região semiárida de Alagoas')
     st.write('É importante mapear áreas semiáridas que sofrem com as constantes estiagens que afetam a população. Nesse caso, a região Oeste de Alagoas é um exemplo que teve sua rede de drenagem mapeada, e pode contribuir para o ODS 6, no reconhecimento da superfície com água potável disponível, que deve ser preservada. ')
     drenagem = gpd.read_file('http://geoinfo.cnps.embrapa.br/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode%3Ahidrografia&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature')
-    m = folium.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9, control_scale=True)
+    m = leafmap.Map(location=[-9.4, -37.3], tiles='Stamen Terrain', zoom_start=9, control_scale=True)
     folium.Choropleth(
         drenagem[drenagem.geometry.length > 0.001],
         line_weight=1,
         line_color='blue'
     ).add_to(m)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="GEO Info Embrapa",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
 
@@ -52,12 +57,17 @@ def app():
     z.extractall()
     disp_agua = gpd.read_file(filename, sep=',')
 
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
+    m = leafmap.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
     folium.Choropleth(
         disp_agua[disp_agua.geometry.length > 0.001],
         line_weight=1,
         line_color='blue'
     ).add_to(m)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="Geoserviços ANA",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write('No cálculo da estimativa da disponibilidade hídrica de águas superficiais no Brasil, foi adotada a vazão de restrição dos reservatórios, '

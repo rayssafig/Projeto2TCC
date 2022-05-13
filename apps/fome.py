@@ -6,6 +6,7 @@ import plotly.express as px
 import functools
 import requests, zipfile, io
 import pandas as pd
+import leafmap.foliumap as leafmap
 
 chart = functools.partial(st.plotly_chart, use_container_width=True)
 COMMON_ARGS = {
@@ -38,9 +39,7 @@ def app():
     
     hunger = gpd.read_file(
         'https://services7.arcgis.com/gp50Ao2knMlOM89z/arcgis/rest/services/SN_ITK_DEFC_2_1_1_2020Q2G03/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
-    #hunger1 = pd.DataFrame(hunger)
     hunger1 = pd.DataFrame(hunger.drop(columns='geometry'))
-    #st.write(hunger.head(1))
 
     url = 'http://www.labgeolivre.ufpr.br/arquivos/ne_110m_admin_0_countries.zip'
     filename = 'ne_110m_admin_0_countries.shp'
@@ -52,7 +51,7 @@ def app():
     Join = pd.merge(mapa, hunger1, left_on="SOV_A3", right_on="ISO3")
 
     st.subheader('Prevalência de subnutrição por país')
-    m = folium.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
+    m = leafmap.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
     bins = list(hunger1['latest_value'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
         geo_data=Join,
@@ -85,6 +84,11 @@ def app():
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="ONU API",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write(

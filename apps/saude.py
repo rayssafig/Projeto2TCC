@@ -4,6 +4,7 @@ import folium
 import geopandas as gpd
 import pandas as pd
 import requests, zipfile, io
+import leafmap.foliumap as leafmap
 
 
 def app():
@@ -54,7 +55,7 @@ def app():
     join = pd.merge(df_bairros, df_casos, left_on="NOME", right_on="BAIRRO")
 
     st.subheader('Mapa de casos da doença por bairro de Curitiba - PR')
-    m = folium.Map(location=[-25.5, -49.3], tiles='Stamen Terrain', zoom_start=11, control_scale=True)
+    m = leafmap.Map(location=[-25.5, -49.3], tiles='Stamen Terrain', zoom_start=11, control_scale=True)
     bins = list(casos_por_bairro['CLASSIFICAÇÃO FINAL'].quantile([0, 0.1, 0.75, 0.9, 0.98, 1]))
     folium.Choropleth(
         geo_data=df_bairros,
@@ -90,6 +91,11 @@ def app():
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="IPPUC",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
 

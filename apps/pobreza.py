@@ -5,6 +5,7 @@ import geopandas as gpd
 import pandas as pd
 import plotly.express as px
 import requests, zipfile, io
+import leafmap.foliumap as leafmap
 
 
 def app():
@@ -40,7 +41,7 @@ def app():
 
     style = {'fillColor': '#f5f5f5', 'lineColor': '#ffffbf'}
     st.subheader('Taxa da população que vive abaixo da linha da pobreza por país')
-    m = folium.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
+    m = leafmap.Map(location=[26.972058, 28.642816], tiles='Stamen Terrain', zoom_start=1.5, control_scale=True)
     folium.GeoJson(
         poverty1,
         name='Proporção em %',
@@ -51,7 +52,13 @@ def app():
             aliases=['País (Área geográfica): ', 'Proporção da população (%): '],
             style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px; icon=icon"),
             localize=True)
+
     ).add_to(m)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="ONU API",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write('**OBS:** Os valores são referentes ao último ano de dados disponíveis.')
@@ -88,7 +95,7 @@ def app():
     Join = pd.merge(mapa, filtered_df, left_on="ISO_A3_EH", right_on="iso_alpha")
 
     st.subheader('**Veja o PIB per capita por país no mapa:**')
-    m = folium.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
+    m = leafmap.Map(location=[26.972058, 28.642816], zoom_start=1.5, control_scale=True)
     bins = list(filtered_df['gdpPercap'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
         geo_data=Join,
@@ -107,7 +114,7 @@ def app():
                                 'weight': 0.1}
     highlight_function = lambda x: {'fillColor': '#000000',
                                     'color': '#000000',
-                                    'fillOpacity': 0,
+                                    'fillOpacity': 1,
                                     'weight': 0.1}
     NIL = folium.features.GeoJson(
         Join,
@@ -121,6 +128,11 @@ def app():
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="ONU API",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write('**OBS:** Os dados de PIB per capita por país são referentes ao ano de 2007. Os países não representados no mapa indicam que não havia informação disponível sobre eles a respeito do PIB per capita daquele '

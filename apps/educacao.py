@@ -6,6 +6,7 @@ from streamlit_folium import folium_static
 import folium
 import plotly.express as px
 import functools
+import leafmap.foliumap as leafmap
 
 chart = functools.partial(st.plotly_chart, use_container_width=True)
 COMMON_ARGS = {
@@ -55,7 +56,7 @@ def app():
     st.write('A seguir, o mapa mostra a porcentagem de pessoas analfabetas, com 15 anos ou mais, por Unidade de Federação, levantados pelo IBGE.')
     st.subheader('Taxa de analfabetismo por estado brasileiro')
 
-    m = folium.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
+    m = leafmap.Map(location=[-12.9, -50.4], zoom_start=4, control_scale=True)
     bins = list(df_casos['2,014.00'].quantile([0, 0.25, 0.5, 0.75, 1]))
     folium.Choropleth(
         geo_data=df_BR,
@@ -87,6 +88,11 @@ def app():
     )
     m.add_child(NIL)
     m.keep_in_front(NIL)
+    m.add_tile_layer(
+        url="",
+        name="OpenStreetMap",
+        attribution="IBGE",
+    )
     folium.LayerControl().add_to(m)
     folium_static(m)
     st.write('**OBS:** As informações sobre as taxas de analfabetismo por Unidade de Federação foram obtidas no levantamento de dados feito pelo IBGE em 2014.')
